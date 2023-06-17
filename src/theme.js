@@ -4,16 +4,17 @@ import { createTheme } from "@mui/material";
 const theme = createTheme({
     palette: {
         background: {
-            default: '#333333',
+            default: '#121200',
             variant1: '#555555',
             variant2: '#777777',
             variant3: '#999999'
         }, 
         primary: {
-            main: '#FFFFFF',
-            light: '#F5F5F5',
-            dark: '#CCCCCC',
-            contrastText: '#000000'
+            main: '#00FFFF',
+            light: '#7FFFD4',
+            dark: '#454B1B',
+            messageBlue1: '#CCFFFF',
+            messageBlue2: '#44a6c6'
           },                                
     },
     typography: {
