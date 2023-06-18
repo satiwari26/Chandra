@@ -17,7 +17,8 @@ function MessageInputField(prop) {
     //to handel the press of sent button
     const sentValueHandler = ()=>{
         if(inputMessage!==''){
-            // prop.setText(inputMessage);
+            prop.setText(inputMessage);
+            setMessage('');
         }
     }
 

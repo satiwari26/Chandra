@@ -3,6 +3,7 @@ import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import React from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
+import {BiUser} from 'react-icons/bi';
 
 function MessageHeaderComponent(props) {
 
@@ -27,14 +28,18 @@ function MessageHeaderComponent(props) {
     }
 
     //using prop value to display the name and image
-    // const {userImage, userName, open, setOpen} = props;
+    const {userImage, userName, open, setOpen} = props;
 
   return (
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
-    background: theme.palette.background.variant1, margin: '10px', position: 'static', width:'100%'}}>
+    background: theme.palette.background.variant1, margin: '10px', width:'100%', overflow: 'hidden'}}>
 
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt='Remy Sharp' src='awda'/></IconButton>
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><VscSettings/></IconButton>
+            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt={userName} src={userImage}/></IconButton>
+            <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
+                    fontSize: '17px', m: '10px', width: '100%'}}>
+                    {userName}
+            </Typography>
+            <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={toggleDrawer(true)}><VscSettings/></IconButton>
             <SwipeableDrawer
                 anchor="right"
                 open={props.open}
@@ -47,13 +52,12 @@ function MessageHeaderComponent(props) {
                 }}
             >
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <img src='https://e7.pngegg.com/pngimages/244/518/png-clipart-eye-icon-eye-service-people-thumbnail.png' alt='No img found' 
+                <img src={userImage} alt='something went wrong' 
                     style={{borderRadius: '200px'}}
                 />
                 <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
                     fontSize: '17px', m: '10px', flexGrow: 1, width: '100%'}}>
-                    {/* {userName} */}
-                    Saumitra Tiwari
+                    {userName}
                     </Typography>
 
                 {chatMenuOptions.map((menuVal)=>{
