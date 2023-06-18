@@ -5,17 +5,20 @@ const theme = createTheme({
     palette: {
         background: {
             default: '#121200',
-            variant1: '#555555',
+            variant1: '#12121',
             variant2: '#777777',
             variant3: '#999999'
         }, 
         primary: {
             main: '#00FFFF',
-            light: '#7FFFD4',
+            light: '#7FFFD4',   //for special showcases
             dark: '#454B1B',
             messageBlue1: '#CCFFFF',
             messageBlue2: '#44a6c6'
-          },                                
+          },   
+          secondary: {
+            main: '#CCFFFF' //message bue 1 color
+          }                             
     },
     typography: {
         heading: {
