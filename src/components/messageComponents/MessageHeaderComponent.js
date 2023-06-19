@@ -3,7 +3,6 @@ import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import React from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
-import {BiUser} from 'react-icons/bi';
 
 function MessageHeaderComponent(props) {
 

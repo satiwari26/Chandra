@@ -44,7 +44,7 @@ const theme = createTheme({
           fontStyle: 'normal',
           fontWeight: 600,
         },
-    }
+    },
 });
 
 export default theme;

@@ -4,10 +4,12 @@ import MessageInputField from '../components/messageComponents/MessageInputField
 import { Box } from '@mui/material';
 import axios from 'axios';
 import MessageGrouping from '../components/messageComponents/MessageGrouping';
+import { useTheme } from '@emotion/react';
 
 
 
 function ChatPage() {
+    const theme = useTheme();
 
     //message header component
     const [userName,setUserName] = useState('');
@@ -46,13 +48,17 @@ function ChatPage() {
     },[userName,userImage]);
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh'}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh',}}>
 
-    <Box sx={{position: 'static', overflow: 'hidden'}}><MessageHeaderComponent {...messageHeaderProp}/></Box>
+    <Box sx={{position: 'fixed', top: 0, left: 0, right: 0, }}><MessageHeaderComponent {...messageHeaderProp}/></Box>
 
-    {/* <MessageGrouping {...textMessage,messageState}/> */}
+    <Box sx={{paddingTop: '5%', paddingBottom: '5%',
+        [theme.breakpoints.up('md')]:{paddingTop: '10%', paddingBottom: '10%'}, [theme.breakpoints.up('sm')]:{paddingTop: '10%', paddingBottom: '10%'},
+        [theme.breakpoints.up('xs')]:{paddingTop: '20%', paddingBottom: '20%'},}}>
+        <MessageGrouping messageProp = {{textMessage,messageState}} style= {{flexGrow: 1, }}/>
+    </Box>
 
-    <Box sx={{position: 'static', overflow: 'hidden'}}><MessageInputField setText = {setTextMessage}/></Box>
+    <Box sx={{position: 'fixed', top: '90%', left: 0, right: 0}}><MessageInputField setText = {setTextMessage}/></Box>
 
     </Box>
   )

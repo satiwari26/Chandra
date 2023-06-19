@@ -5,13 +5,17 @@ import UserIndividualMessageSend from './UserIndividualMessageSend';
 import UserindividualMessageReceived from './UserindividualMessageReceived';
 
 function MessageGrouping(props) {
-  return (
-    <Box sx = {{display: 'flex', flexDirection: 'column-reverse'}}>
-        <UserindividualMessageReceived message = {props.textMessage}/>
 
-    <Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-    <UserIndividualMessageSend {...props}/>
-    </Box>
+    let sentMessageProp = {
+        textMessage: props.messageProp.textMessage,
+        messageState: props.messageProp.messageState,
+      };
+      
+    console.log(props.messageProp);
+  return (
+    <Box sx = {{display: 'flex', flexDirection: 'column-reverse', overflowY: 'auto',}}>
+        <UserindividualMessageReceived message = {props.messageProp.textMessage}/>
+        <UserIndividualMessageSend {...sentMessageProp}/>
     </Box>
   )
 }
