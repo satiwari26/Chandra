@@ -4,7 +4,7 @@ function UserIndividualMessageSend({messageState,textMessage}) {
     const theme = useTheme();
   return (
     /* word wrap decides when to break the long char onto the next line */
-    <Box sx={{display: `flex`, flexDirection: 'column', justifyContent: 'spaceEvenly'}}>
+    <Box sx={{display: `flex`, flexDirection: 'column', justifyContent: 'spaceEvenly', paddingTop: '3%'}}>
       {
         textMessage !==''?
         <>

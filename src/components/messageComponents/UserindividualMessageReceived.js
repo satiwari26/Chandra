@@ -5,8 +5,9 @@ function UserindividualMessageReceived(props) {
     const theme = useTheme();
     return (
       /* word wrap decides when to break the long char onto the next line */
-      <Box sx={{display: `flex`, flexDirection: 'column', justifyContent: 'spaceEvenly'}}>
-  
+      <Box sx={{display: `flex`, flexDirection: 'column', justifyContent: 'spaceEvenly', paddingTop: '3%'}}>
+          {props.message !== ''?
+          <>
           <Paper sx={{ background: theme.palette.primary.messageBlue1, wordWrap: `break-word`,
            overflow: `hidden`, display: 'inline-block',
           whiteSpace: 'pre-wrap',
@@ -14,7 +15,9 @@ function UserindividualMessageReceived(props) {
           variant='outlined' elevation={6}>
           <Typography variant='messages' color={theme.palette.background.default}>{props.message}</Typography>
           </Paper>
-
+          </>:
+          null
+          }
       </Box>
     )
 }

@@ -14,12 +14,22 @@ function ChatPage() {
     //message header component
     const [userName,setUserName] = useState('');
     const [userImage,setUserImage] = useState('');
-    const [open, setOpen] = useState(false);
-    let messageHeaderProp = {userName,userImage,open,setOpen};
+    // const [open, setOpen] = useState(false);
+    let messageHeaderProp = {userName,userImage};
 
     //message input field
-    const [textMessage,setTextMessage] = useState('');
-
+    const [textMessage,setTextMessage] = useState('');      
+    //messges from data base are retrived in this manner,
+    //might have to modify the logic later
+    // {
+    //     id: 'messageId1',
+    //     sender: 'user1',
+    //     recipient: 'user2',
+    //     timestamp: '2023-05-21T12:34:56',
+    //     content: 'Hello, how are you?',
+    //   }
+      
+    
     //userIndividual Message send
     const [messageState, setMessageState] = useState(false);
     // let messageSendProp = {messageState,textMessage};
@@ -48,9 +58,9 @@ function ChatPage() {
     },[userName,userImage]);
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh',}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100vh', width: '100%'}}>
 
-    <Box sx={{position: 'fixed', top: 0, left: 0, right: 0, }}><MessageHeaderComponent {...messageHeaderProp}/></Box>
+    <Box sx={{position: 'fixed', top: 0,}}><MessageHeaderComponent {...messageHeaderProp}/></Box>
 
     <Box sx={{paddingTop: '5%', paddingBottom: '5%',
         [theme.breakpoints.up('md')]:{paddingTop: '10%', paddingBottom: '10%'}, [theme.breakpoints.up('sm')]:{paddingTop: '10%', paddingBottom: '10%'},
@@ -58,7 +68,7 @@ function ChatPage() {
         <MessageGrouping messageProp = {{textMessage,messageState}} style= {{flexGrow: 1, }}/>
     </Box>
 
-    <Box sx={{position: 'fixed', top: '90%', left: 0, right: 0}}><MessageInputField setText = {setTextMessage}/></Box>
+    <Box sx={{position: 'fixed', bottom: 0,}}><MessageInputField setText = {setTextMessage}/></Box>
 
     </Box>
   )

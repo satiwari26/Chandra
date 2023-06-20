@@ -25,7 +25,7 @@ function MessageInputField(prop) {
     const theme = useTheme();
   return (
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
-    background: theme.palette.background.variant1, margin: '5px' }}>
+    background: theme.palette.background.variant1,}}>
     <TextField id="filled-basic" label="Type your message here" variant="filled" color= 'secondary'
         InputProps={{
             style: {

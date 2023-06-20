@@ -1,12 +1,13 @@
 import { useTheme } from '@emotion/react';
 import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
-import React from 'react';
+import React, { useState } from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
 
 function MessageHeaderComponent(props) {
 
     const theme = useTheme();
+    const [open, setOpen] = useState(false);
 
     //sidePanel menu and options for chat
     const chatMenuOptions = ['Close Chat', 'Delete Chat', 'Clear Message'];
@@ -22,16 +23,16 @@ function MessageHeaderComponent(props) {
                 return;
               }
 
-              return(props.setOpen(toggledVal));
+              return(setOpen(toggledVal));
         });
     }
 
     //using prop value to display the name and image
-    const {userImage, userName, open, setOpen} = props;
+    const {userImage, userName} = props;
 
   return (
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
-    background: theme.palette.background.variant1, margin: '10px', width:'100%', overflow: 'hidden'}}>
+    background: theme.palette.background.variant1, width:'100%', overflow: 'hidden'}}>
 
             <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt={userName} src={userImage}/></IconButton>
             <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
@@ -41,7 +42,7 @@ function MessageHeaderComponent(props) {
             <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={toggleDrawer(true)}><VscSettings/></IconButton>
             <SwipeableDrawer
                 anchor="right"
-                open={props.open}
+                open={open}
                 onClose={toggleDrawer(false)}
                 onOpen={toggleDrawer(true)}
                 sx={{
