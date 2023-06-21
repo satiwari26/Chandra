@@ -16,7 +16,7 @@ const IndividualUserComponent = ({userImage, userName}) => {
      <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='28px' 
      sx={{padding: '2px', paddingLeft:'10px', flexGrow: 1}}>{userName}</Typography>
 
-    <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='28px' 
+    <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='30px' 
      sx={{padding: '2px'}}><IoMdArrowDropright/></Typography>
 
     </Paper>

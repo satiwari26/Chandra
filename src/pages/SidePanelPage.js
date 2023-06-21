@@ -15,7 +15,7 @@ export const SidePanelPage = ({userList,personalInfo}) => {
     const userIndividual = {userImage, userName};
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', width: '30%', background: theme.palette.background.variant1, height: '100vh'}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', minWidth: '25%', background: theme.palette.background.variant1, height: '100vh'}}>
         
         <Box sx={{padding: '5%',border: `2px solid ${theme.palette.background.variant2}`}}>
         <MessageHeaderComponent/>

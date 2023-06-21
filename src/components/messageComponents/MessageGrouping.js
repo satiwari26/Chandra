@@ -13,9 +13,10 @@ function MessageGrouping(props) {
       
     console.log(props.messageProp);
   return (
-    <Box sx = {{display: 'flex', flexDirection: 'column-reverse', overflowY: 'auto',}}>
+    <Box sx = {{display: 'flex', flexDirection: 'column-reverse',}}>
         <UserindividualMessageReceived message = {props.messageProp.textMessage}/>
         <UserIndividualMessageSend {...sentMessageProp}/>
+
     </Box>
   )
 }

@@ -30,8 +30,8 @@ const theme = createTheme({
         messages: {
           fontFamily: 'Dancing Script, cursive',
           fontStyle: 'normal',
-          fontWeight: 700,
-          fontSize: `20px`
+          fontWeight: 900,
+          fontSize: `23px`
         },
         users: {
             fontFamily: 'Heebo, sans-serif',
