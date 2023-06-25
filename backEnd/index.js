@@ -47,6 +47,17 @@ app.get('/userName',(request,response,next)=>{  //this is our second middleware 
 
 });
 
+
+app.get('/userName/:user', (request,response)=>{
+    const {user} = request.params;  //we can also destructure the object and get the individual value from route param
+
+    //for the each value of the array, find the user that name matches with the endpoint name
+    const userName = profile.find((individualUser)=>{return(individualUser.name ===user)});
+
+    response.send(userName);    // this would be an object because we looked at individual object and searched it with 
+    //the first name
+});
+
 app.post('/userName',(req,res)=>{
     console.log(req.body);  //contains the data that is received from the client via req
     res.sendStatus(201);  //success code
