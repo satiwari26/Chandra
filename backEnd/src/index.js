@@ -1,5 +1,7 @@
 const express = require('express');
 
+require('./database');
+
 const session = require('express-session');
 
 //import the router from the userName and use it in my main index file
@@ -11,6 +13,7 @@ const userLocationRouter = require('./routes/location');
 const app = express();
 
 const PORT = 3000;  //custom port
+
 
  app.use(express.json());   //middle ware, basically means it acts as a in-between
  //program that is declared before the handler function(i.e (req,res)) function is declared
