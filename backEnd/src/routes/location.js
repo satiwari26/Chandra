@@ -3,21 +3,55 @@ const {Router} = require('express');
 const router  = Router();
 
 const location = [{
+    id: 1,
     city: 'Cameron Park',
-    country: 'USA'
+    country: 'USA',
+    miles: 20,
 },
 {
+    id: 2,
     city: 'Lucknow',
-    country: 'India'
+    country: 'India',
+    miles: 50000,
 },
 {
+    id: 3,
     city: 'SFO',
-    country: 'USA'
+    country: 'USA',
+    miles: 200,
+},
+{
+    id: 4,
+    city: 'Eldorado Hills',
+    country: 'USA',
+    miles: 15,
+},
+{
+    id: 5,
+    city: 'Raebareli',
+    country: 'India',
+    miles: 56000,
+},
+{
+    id: 6,
+    city: 'LA',
+    country: 'USA',
+    miles: 206,
 },
 ];
 
+
+
 router.get('/', (req,res)=>{
-    res.send(location);
+    const {miles} = req.query;
+    const parseMiles = parseInt(miles);
+
+    if(!isNaN(parseMiles)){
+        const filterLocation = location.filter((individualLocation)=>{return(individualLocation.miles<=parseMiles)});
+        res.send(filterLocation);
+    }
+    else{res.send(location);}
+    
 });
 
 router.get('/:userCity',(req,res)=>{

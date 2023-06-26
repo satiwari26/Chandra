@@ -1,5 +1,7 @@
 const express = require('express');
 
+const session = require('express-session');
+
 //import the router from the userName and use it in my main index file
 const userNameRouter = require('./routes/userName');
 
@@ -14,6 +16,12 @@ const PORT = 3000;  //custom port
  //program that is declared before the handler function(i.e (req,res)) function is declared
  // the reason is because every time client makes the request that request first goes through the middleware method
  //where it's data gets parsed and then handler function gets executed.
+
+ app.use(session({
+   secret: 'SEFSEHFHAUHEWEUFHSEFSEFSEFSEF',
+   resave: false,
+   saveUninitialized: false,
+ }))
 
  app.use((req,res,next)=>{  //global middleware that would work for any routes and globally
     console.log(`${req.method} : ${req.url}`);
