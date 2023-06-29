@@ -1,5 +1,6 @@
 const express = require('express');
 
+//importing data base files
 require('./database');
 
 const session = require('express-session');

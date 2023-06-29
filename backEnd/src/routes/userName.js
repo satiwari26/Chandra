@@ -1,4 +1,7 @@
-const {Router} = require('express');
+const {Router, response} = require('express');
+
+//importing the model created by the mongoose
+const User = require('../database/schemas/User');
 
 //similar to  express we create the router by calling the Router function
 const router = Router();
@@ -63,6 +66,21 @@ router.get('/naming/suffix', (request,response)=>{
         response.send(suffix);
     }
 });
+
+//creating the data for the mongoose dataBase,
+router.post('/register', async(request,response)=>{ //need to add async to make sure that it performs this operation async
+    const {userName, password, email} = request.body;
+    const userDB = await User.findOne({$or: [{userName}, {email}]});
+
+    if(userDB){ //if we found the user with the corresponding name or email
+        response.status(400).send({msg: 'user already exist'});
+    }
+    else{
+        const newUser = await User.create({userName,password,email});  //create a new user with these values
+        newUser.save(); //and we save that user
+        response.status(200).send({msg: 'registration successful!'});
+    }
+})
 
 router.post('/naming/suffix/gender',(req,res)=>{
     const {name,lastName} = req.body;
