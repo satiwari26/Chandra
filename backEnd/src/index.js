@@ -49,7 +49,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
 
     socket.on('sendChatMessage',(newMessage)=>{  //we are adding listner to the server so it is listening to
       //messages that we sent from the client
-      console.log(newMessage);
+      // console.log(newMessage);
       
       Conversation.findOne({
         $or: [

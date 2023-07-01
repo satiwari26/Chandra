@@ -20,7 +20,7 @@ function MessageGrouping(props) {
         axios
           .get(`http://localhost:3001/Chandra/conversation/${userName}/${ReceiverUserName}`)
           .then((response) => {
-            setPost(response.data.conversation);
+            setPost(response.data);
           })
           .catch((error) => {
             console.log(error);
@@ -44,8 +44,8 @@ function MessageGrouping(props) {
   return (
     <Box sx = {{display: 'flex', flexDirection: 'column-reverse',}}>
 
-    {/* {console.log(post.content)} */}
-    {post.content && Array.isArray(post.content) && (post.content).reverse().map((individualPost,index)=>{return(
+    {/* {console.log(post)} */}
+    {post.message === 'Conversation exists' && post.conversation.content && Array.isArray(post.conversation.content) && (post.conversation.content).slice().reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
         {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {individualPost.message} />:
         <UserindividualMessageReceived textMessage = {individualPost.message}/>}

@@ -28,10 +28,10 @@ export const MainPageCombined = () => {
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
 
     useEffect(()=>{
-      socket.on('chatMessage',(data)=>{//adding socket event listner to listen to the receiving chatMessages
-        // setTextMessage(data);
-        // console.log(data);
-      });
+      // socket.on('chatMessage',(data)=>{//adding socket event listner to listen to the receiving chatMessages
+      //   // setTextMessage(data);
+      //   // console.log(data);
+      // });
       
       if(userName !=='' && ReceiverUserName !=='' && userEmail !==''){
         socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
