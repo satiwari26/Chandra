@@ -1,7 +1,7 @@
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 function UserIndividualMessageSend(prop) {
-  console.log(prop.textMessage)
+  // console.log(prop.textMessage)
     const theme = useTheme();
   return (
     /* word wrap decides when to break the long char onto the next line */

@@ -15,25 +15,37 @@ function MessageGrouping(props) {
   const textMessage = props.messageProp.textMessage;
 
   useEffect(()=>{
-    if(userName !=='' && ReceiverUserName !==''){
-    axios.get(`http://localhost:3001/Chandra/conversation/${userName}/${ReceiverUserName}`)
-    .then((response)=>{
-      console.log(response.data.conversation);
-      setPost(response.data.conversation);
-    })
-    .catch((error)=>{
-      return(console.log(error));
-    },);
-  }
+    const fetchData = () => {
+      if (userName !== '' && ReceiverUserName !== '') {
+        axios
+          .get(`http://localhost:3001/Chandra/conversation/${userName}/${ReceiverUserName}`)
+          .then((response) => {
+            setPost(response.data.conversation);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    };
 
-  },[textMessage,userName,ReceiverUserName,userEmail]);
+    // Fetch data initially
+    fetchData();
+
+      // Fetch data every 10 seconds
+    const interval = setInterval(fetchData, 30000);
+
+    return () => {
+      clearInterval(interval);
+    };
+
+  },[textMessage,userName,ReceiverUserName,userEmail,post]);
       
     // console.log(props.messageProp);
   return (
     <Box sx = {{display: 'flex', flexDirection: 'column-reverse',}}>
 
-    {console.log(post.content)}
-    {post.content && Array.isArray(post.content) && (post.content).map((individualPost,index)=>{return(
+    {/* {console.log(post.content)} */}
+    {post.content && Array.isArray(post.content) && (post.content).reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
         {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {individualPost.message} />:
         <UserindividualMessageReceived textMessage = {individualPost.message}/>}
