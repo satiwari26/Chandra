@@ -4,8 +4,14 @@ const express = require('express');
  require('./database');
  const Conversation = require('./database/schemas/Conversation');
 
+ //importing Groupconversation Model
+ const groupConversation = require('./database/schemas/GroupConversation');
+
  //importing the conversation router
  const conversationRouter = require('./routes/Conversation');
+
+ //importing the groupConversation router
+ const groupConversationRouter = require('./routes/GroupConversation');
 
 const session = require('express-session');
 
@@ -26,6 +32,7 @@ app.use(cors());
 
 //letting the app know about the conversation Router and prefix endpoint using middleware
 app.use('/Chandra/conversation',conversationRouter);
+app.use('/Chandra/groupConversation',groupConversationRouter);
 
 
 //create the http serve that socket io uses to work with
@@ -48,7 +55,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
   // {Sender: message.receiver, Receiver: message.sender}
 
     socket.on('sendChatMessage',(newMessage)=>{  //we are adding listner to the server so it is listening to
-      //messages that we sent from the client
+      //individual messages that we sent from the client
       // console.log(newMessage);
       
       Conversation.findOne({
@@ -101,6 +108,55 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
 
           //to send the message to everyone that is on this server, except to the one that is sending this message
         // socket.broadcast.emit('chatMessage',message);
+    });
+
+
+    //adding another listner that is going to listent to groupMessages sent from the client
+    socket.on('sendGroupChatMessage',(newMessage)=>{
+      groupConversation.findOne({GroupName: newMessage.groupName})
+      .then((existingConversation) => {
+        if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
+          existingConversation.content.push({
+            user: newMessage.content.user,
+            message: newMessage.content.message,
+            email: newMessage.content.senderEmail
+          });
+
+          //save the updated conversation
+          existingConversation.save().then((updatedConversation)=>{
+            console.log('Conversation updated:', updatedConversation);
+          })
+          .catch((error) => {
+            console.log('Error updating conversation:', error);
+          });
+
+        }
+        else{ //if conversation doesn't exist
+          const newGroupConversation = new groupConversation({
+            GroupName: newMessage.groupName,
+            Members: newMessage.members,
+            content: [{
+              user: newMessage.content.user,
+              message: newMessage.content.message,
+              email: newMessage.content.senderEmail
+            }]
+          });
+
+          
+        // Save the new conversation
+        newGroupConversation.save()
+        .then((savedConversation) => {
+          console.log('Conversation saved:', savedConversation);
+        })
+        .catch((error) => {
+          console.log('Error saving conversation:', error);
+        });
+    }
+      
+      }).catch((error) => {
+        console.log('Error finding conversation:', error);
+      });
+      
     });
 });
 

@@ -4,6 +4,7 @@ import { SidePanelPage } from './SidePanelPage'
 import MessageHeaderComponent from '../components/messageComponents/MessageHeaderComponent'
 import MessageGrouping from '../components/messageComponents/MessageGrouping'
 import MessageInputField from '../components/messageComponents/MessageInputField'
+import GroupMessageGrouping from '../components/messageComponents/GroupMessageGrouping'
 //to create a connection of socketIO from the backend
 import io from 'socket.io-client';
 
@@ -16,8 +17,13 @@ export const MainPageCombined = () => {
     const [userEmail,setUserEmail] = useState(''); //to uniquely identify each user
     const [userName,setUserName] = useState('');  //senders info
 
+    //to specify if the message that we are sending is a group message or not
+    const [isGroupMessage,setIsGroupMessage] = useState('false');
+    const [groupName,setGroupName] = useState('');
+    const [groupMembers,setGroupMembers] = useState(['saumitra','dhruv','shrey']);
+
     // const [receivedTextMessage,setReceivedTextMessage] = useState('');
-    const [messageState, setMessageState] = useState(false);
+    // const [messageState, setMessageState] = useState(false);
 
     //messageHeader &receiver info
     const [ReceiverUserImage, setReceiverUserImage] = useState('');
@@ -27,29 +33,47 @@ export const MainPageCombined = () => {
 
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
 
+    //individual message sideEffects
     useEffect(()=>{
       // socket.on('chatMessage',(data)=>{//adding socket event listner to listen to the receiving chatMessages
       //   // setTextMessage(data);
       //   // console.log(data);
       // });
-      
-      if(userName !=='' && ReceiverUserName !=='' && userEmail !==''){
-        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
+
+      if (groupName !== '') {
+        setIsGroupMessage(true);
+      } else {
+        setIsGroupMessage(false);
       }
 
-    },[textMessage]);
+      if(isGroupMessage===false){  //render this when not the group message
+      if(userName !=='' && ReceiverUserName !=='' && userEmail !=='' && textMessage !==''){
+        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
+      }
+    }
+
+      if(isGroupMessage===true){ //render this conditionally when sending the group message
+        if(groupName !== '' && textMessage !==''){
+          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
+        }
+      }
+
+      return ()=>{socket.disconnect()}
+
+    },[textMessage,ReceiverUserName,userEmail,userName,groupMembers,groupName,isGroupMessage]);
 
 
     //temp changes
     const [tempVal,setTempVal] = useState('');
     const [tempValsender,setTempValsender] = useState('');
     const [tempValreceiver,setTempValreceiver] = useState('');
+    const [tempGroupName,setTempGroupName] = useState('');
     const handleSubmit = (e) => {
       e.preventDefault();
       setUserEmail(tempVal);
       setUserName(tempValsender);
       setReceiverUserName(tempValreceiver);
-      
+      setGroupName(tempGroupName);
     };
   
     const handleChange1 = (e) => {
@@ -60,6 +84,9 @@ export const MainPageCombined = () => {
     };
     const handleChange3 = (e) => {
       setTempValreceiver(e.target.value);
+    };
+    const handleChange4 = (e) => {
+      setTempGroupName(e.target.value);
     };
 
 
@@ -86,6 +113,11 @@ export const MainPageCombined = () => {
                Receiver name:
               <input type="receiver's name" value={tempValreceiver} onChange={handleChange3} />
               </label>
+
+              <label>
+               Group name:
+              <input type="Group's name" value={tempGroupName} onChange={handleChange4} />
+              </label>
               
               <button type="submit">Submit</button>
               </form>: null}
@@ -95,7 +127,11 @@ export const MainPageCombined = () => {
             <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
             <Box sx={{flexGrow: 1, overflowY: 'auto', height:'60vh'}}>
-            <MessageGrouping messageProp = {{userName,ReceiverUserName,userEmail}}/>
+              {isGroupMessage?<><GroupMessageGrouping messageProp = {{userName,groupName,userEmail}}/></>:
+                <>
+                <MessageGrouping messageProp = {{userName,ReceiverUserName,userEmail}}/>
+                </>
+              }
             </Box>
 
             <Box>

@@ -5,19 +5,19 @@ import UserIndividualMessageSend from './UserIndividualMessageSend';
 import UserindividualMessageReceived from './UserindividualMessageReceived';
 import axios from 'axios';
 
-function MessageGrouping(props) {
+function GroupMessageGrouping(props) {
 
   const [post,setPost] = useState([]);
 
   const userName =  props.messageProp.userName;
-  const ReceiverUserName = props.messageProp.ReceiverUserName;
+  const groupName = props.messageProp.groupName;
   const userEmail = props.messageProp.userEmail;
 
   useEffect(()=>{
     const fetchData = () => {
-      if (userName !== '' && ReceiverUserName !== '') {
+      if (groupName !=='') {
         axios
-          .get(`http://localhost:3001/Chandra/conversation/${userName}/${ReceiverUserName}`)
+          .get(`http://localhost:3001/Chandra/groupConversation/${groupName}`)
           .then((response) => {
             setPost(response.data);
           })
@@ -37,14 +37,14 @@ function MessageGrouping(props) {
       clearInterval(interval);
     };
 
-  },[userName,ReceiverUserName,userEmail,post]);
+  },[userName,groupName,userEmail,post]);
       
     // console.log(props.messageProp);
   return (
     <Box sx = {{display: 'flex', flexDirection: 'column-reverse',}}>
 
     {/* {console.log(post)} */}
-    {post.message === 'Conversation exists' && post.conversation.content && Array.isArray(post.conversation.content) && (post.conversation.content).slice().reverse().map((individualPost,index)=>{return(
+    {post.message === 'Group Conversation exists' && post.group.content && Array.isArray(post.group.content) && (post.group.content).slice().reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
         {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {individualPost.message} />:
         <UserindividualMessageReceived textMessage = {individualPost.message}/>}
@@ -57,4 +57,4 @@ function MessageGrouping(props) {
   )
 }
 
-export default MessageGrouping
+export default GroupMessageGrouping;
