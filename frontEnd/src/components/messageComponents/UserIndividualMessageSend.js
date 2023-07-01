@@ -1,20 +1,20 @@
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Paper, Typography, useTheme } from '@mui/material';
 
 function UserIndividualMessageSend(prop) {
-  // console.log(prop.textMessage)
+  // console.log(prop.textMessage.message)
     const theme = useTheme();
   return (
     /* word wrap decides when to break the long char onto the next line */
     <Box sx={{display: `flex`, flexDirection: 'column', justifyContent: 'spaceEvenly', paddingTop: '3%', paddingLeft: '1%'}}>
       {
-        prop.textMessage !==''?
+        prop.textMessage.message !==''?
         <>
         <Paper sx={{ background: theme.palette.primary.messageBlue2, wordWrap: `break-word`,
-         overflow: `hidden`, display: 'inline-block',
+         overflow: `hidden`, display: 'flex',
         whiteSpace: 'pre-wrap',
         maxWidth: '40%', boxShadow: `0px 2px 4px ${theme.palette.primary.messageBlue2}`, borderRadius: '20px 20px 0px 20px' }} 
         variant='outlined'>
-        <Typography variant='messages' color={theme.palette.background.default} sx={{paddingLeft: '2%'}}>{prop.textMessage}</Typography>
+        <Avatar src={prop.textMessage.userImage}/><Typography variant='messages' color={theme.palette.background.default} sx={{paddingLeft: '2%'}}>{prop.textMessage.message}</Typography>
         </Paper>
 
             {/* to display if the message is sent or not. */}

@@ -46,8 +46,8 @@ function MessageGrouping(props) {
     {/* {console.log(post)} */}
     {post.message === 'Conversation exists' && post.conversation.content && Array.isArray(post.conversation.content) && (post.conversation.content).slice().reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
-        {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {individualPost.message} />:
-        <UserindividualMessageReceived textMessage = {individualPost.message}/>}
+        {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {{message: individualPost.message, userImage: individualPost.userImage}} />:
+        <UserindividualMessageReceived textMessage = {{message: individualPost.message, userImage: individualPost.userImage}}/>}
       </React.Fragment>
     )})}
         {/* <UserindividualMessageReceived message = {props.messageProp.textMessage}/>

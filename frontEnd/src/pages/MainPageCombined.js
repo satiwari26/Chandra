@@ -8,6 +8,8 @@ import GroupMessageGrouping from '../components/messageComponents/GroupMessageGr
 //to create a connection of socketIO from the backend
 import io from 'socket.io-client';
 
+import chandra from '../assets/chandra_static.jpg'  //temp
+
 //creating connection to the socket server
 const socket = io.connect("http://localhost:3001");
 
@@ -16,6 +18,7 @@ export const MainPageCombined = () => {
     const [textMessage,setTextMessage] = useState('');
     const [userEmail,setUserEmail] = useState(''); //to uniquely identify each user
     const [userName,setUserName] = useState('');  //senders info
+    const [userImage,setUserImage] = useState('');
 
     //to specify if the message that we are sending is a group message or not
     const [isGroupMessage,setIsGroupMessage] = useState('false');
@@ -48,17 +51,15 @@ export const MainPageCombined = () => {
 
       if(isGroupMessage===false){  //render this when not the group message
       if(userName !=='' && ReceiverUserName !=='' && userEmail !=='' && textMessage !==''){
-        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
+        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail, userImage: chandra}}); //we are emitting the message to the server from the client
       }
     }
 
       if(isGroupMessage===true){ //render this conditionally when sending the group message
         if(groupName !== '' && textMessage !==''){
-          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderEmail: userEmail}}); //we are emitting the message to the server from the client
+          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderEmail: userEmail, userImage: chandra}}); //we are emitting the message to the server from the client
         }
       }
-
-      return ()=>{socket.disconnect()}
 
     },[textMessage,ReceiverUserName,userEmail,userName,groupMembers,groupName,isGroupMessage]);
 
@@ -127,7 +128,7 @@ export const MainPageCombined = () => {
             <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
             <Box sx={{flexGrow: 1, overflowY: 'auto', height:'60vh'}}>
-              {isGroupMessage?<><GroupMessageGrouping messageProp = {{userName,groupName,userEmail}}/></>:
+              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userEmail}}/></>:
                 <>
                 <MessageGrouping messageProp = {{userName,ReceiverUserName,userEmail}}/>
                 </>

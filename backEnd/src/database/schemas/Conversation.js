@@ -17,7 +17,11 @@ const ConversationSchema = new mongoose.Schema({
         email: {  //will check if the user is you or someone else
           type: String,
           required: true
-        }
+        },
+        userImage: {
+          type: String,
+          default: 'https://hips.hearstapps.com/hmg-prod/images/fantastic-moonlight-royalty-free-image-943911344-1553714433.jpg?crop=0.998xw:0.817xh;0.00160xw,0&resize=1200:*'
+        },
       }],
     timestamp: {
         type: Date,
@@ -26,4 +30,4 @@ const ConversationSchema = new mongoose.Schema({
 });
 
 //need to compile our schema into an actual model
-module.exports = mongoose.model('users',ConversationSchema);
+module.exports = mongoose.model('ConversationPro',ConversationSchema);

@@ -9,7 +9,6 @@ function GroupMessageGrouping(props) {
 
   const [post,setPost] = useState([]);
 
-  const userName =  props.messageProp.userName;
   const groupName = props.messageProp.groupName;
   const userEmail = props.messageProp.userEmail;
 
@@ -37,7 +36,7 @@ function GroupMessageGrouping(props) {
       clearInterval(interval);
     };
 
-  },[userName,groupName,userEmail,post]);
+  },[groupName,userEmail,post]);
       
     // console.log(props.messageProp);
   return (
@@ -46,8 +45,8 @@ function GroupMessageGrouping(props) {
     {/* {console.log(post)} */}
     {post.message === 'Group Conversation exists' && post.group.content && Array.isArray(post.group.content) && (post.group.content).slice().reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
-        {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {individualPost.message} />:
-        <UserindividualMessageReceived textMessage = {individualPost.message}/>}
+        {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {{message: individualPost.message, userImage: individualPost.userImage}} />:
+        <UserindividualMessageReceived textMessage = {{message: individualPost.message, userImage: individualPost.userImage}}/>}
       </React.Fragment>
     )})}
         {/* <UserindividualMessageReceived message = {props.messageProp.textMessage}/>

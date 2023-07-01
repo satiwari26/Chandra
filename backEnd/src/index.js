@@ -67,7 +67,8 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
           if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
             existingConversation.content.push({
               message: newMessage.content.message,
-              email: newMessage.content.senderEmail
+              email: newMessage.content.senderEmail,
+              userImage: newMessage.content.userImage
             });
 
             //save the updated conversation
@@ -86,7 +87,8 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
                   Receiver: newMessage.receiver,
                   content: [{
                     message: newMessage.content.message,
-                    email: newMessage.content.senderEmail
+                    email: newMessage.content.senderEmail,
+                    userImage: newMessage.content.userImage
                   }]
                 });
 
@@ -119,7 +121,8 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
           existingConversation.content.push({
             user: newMessage.content.user,
             message: newMessage.content.message,
-            email: newMessage.content.senderEmail
+            email: newMessage.content.senderEmail,
+            userImage: newMessage.content.userImage
           });
 
           //save the updated conversation
@@ -138,7 +141,8 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
             content: [{
               user: newMessage.content.user,
               message: newMessage.content.message,
-              email: newMessage.content.senderEmail
+              email: newMessage.content.senderEmail,
+              userImage: newMessage.content.userImage
             }]
           });
 
