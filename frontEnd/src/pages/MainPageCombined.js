@@ -32,6 +32,7 @@ export const MainPageCombined = () => {
 
     //list of the conversation
     const [coversationList,setConversationList] = useState([{name: '', avatar: chandra, id: 0}]);
+    const [userList,setUserList] = useState([]);
 
     //extracting the prompt from the message, looking for the open-ai keyword
     const [containsKeyword,setContainsKeyword] = useState(false);
@@ -53,7 +54,6 @@ export const MainPageCombined = () => {
     axios
           .get(`http://localhost:3001/Chandra/self/canvas-api`)
           .then((response) => {
-            console.log(response.data);
             setUserName(response.data.name);
             setUserID(response.data.id);
             setUserImage(response.data.avatar_url);
@@ -64,8 +64,8 @@ export const MainPageCombined = () => {
   },[]);
 
   //access the course info from the canvas api and generate the list with this
-  let newCourseArray = [];
   useEffect(()=>{
+    let newCourseArray = [];
     axios
           .get(`http://localhost:3001/Chandra/courses/canvas-api`)
           .then((response) => {
@@ -81,11 +81,33 @@ export const MainPageCombined = () => {
             }).filter((value) => value !== null); // Filter out null values
       
             setConversationList(() => [ ...newCourseArray]);
+
+          // Access all the users list from the course
+            newCourseArray.forEach((value) => {
+              if(value.name !==undefined){
+              axios
+                .get(`http://localhost:3001/Chandra/courseUsers/canvas-api/${value.id}`)
+                .then((response) => {
+                  // console.log(response.data);
+                  setUserList((prevUserList) => [...prevUserList, ...response.data]);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              }
+            })
+
           })
           .catch((error) => {
             console.log(error);
           });
-  },[coversationList]);
+
+  },[]);
+
+  // useEffect(() => {
+  //   // console.log(userList);
+  //   console.log(coversationList);
+  // }, [coversationList]);
 
 
 
@@ -146,47 +168,25 @@ export const MainPageCombined = () => {
       if(userName !=='' && ReceiverUserName !=='' && userID !==0 && textMessage !==''){
         socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderID: userID, userImage: userImage}}); //we are emitting the message to the server from the client
       }
+      setTextMessage(''); //reset the text message to empty sting so it doesn't send other users some different message.
     }
 
       if(isGroupMessage===true && containsKeyword === false){ //render this conditionally when sending the group message
         if(groupName !== '' && textMessage !==''){
           socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderID: userID, userImage: userImage}}); //we are emitting the message to the server from the client
         }
+        setTextMessage(''); //reset the text message to empty sting so it doesn't send other users some different message.
       }
 
     },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword,userImage]);
 
-
-    //temp changes
-    const [tempValreceiver,setTempValreceiver] = useState('');
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      setReceiverUserName(tempValreceiver);
-    };
-    const handleChange3 = (e) => {
-      setTempValreceiver(e.target.value);
-    };
-
-    const sidePanelProp = {coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,
-      setReceiverUserImage,setReceiverUserName};
+    const sidePanelProp = {setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,
+      setReceiverUserImage,setReceiverUserName,userList};
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>
         <SidePanelPage style={{height: '100vh'}} {...sidePanelProp}/>
         <Box sx={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
-
-            <>
-            {ReceiverUserName ===''?
-            <form onSubmit={handleSubmit}>
-
-              <label>
-               Receiver name:
-              <input type="receiver's name" value={tempValreceiver} onChange={handleChange3} />
-              </label>
-              
-              <button type="submit">Submit</button>
-              </form>: null}
-            </>
 
             <Box sx={{height: '10%', minWidth: '100%'}}>
             <MessageHeaderComponent {...messageHeaderProp}/>

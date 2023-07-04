@@ -3,9 +3,9 @@ import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import React, { useState } from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
+import chandra from '../../assets/chandra_static.jpg';
 
-function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage, userName, isMessageHeader }) {
-
+function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage, userName, isMessageHeader, userList,setReceiverUserName,setConversationList }) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
@@ -37,6 +37,11 @@ function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage
       displayedUserName = ReceiverUserName;
     }
 
+    const selectedUser = (name) => {
+      setReceiverUserName(name);
+      setConversationList((prevConversationList) => [ ...prevConversationList,{name: name, avatar: chandra, id: 0}]);
+    }
+
   return (
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
     background: theme.palette.background.variant1, width:'100%', overflow: 'hidden'}}>
@@ -58,7 +63,7 @@ function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage
                 width: '20%', overflow: 'hidden'},
                 }}
             >
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden'}}>
                 <img src={displayedUserImage} alt='something went wrong' 
                     style={{borderRadius: '200px'}}
                 />
@@ -75,7 +80,14 @@ function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage
                     <Button variant='contained' sx={{width: '100%'}}>{menuVal}</Button></Typography>);
                 })}
                 </>:
-                null}
+                <>
+                {userList.map((individualUser,index)=>{
+                    return(<Typography key={index} color={theme.palette.primary.messageBlue2} sx = {{justifyContent: 'flex-start',
+                    fontSize: '17px', m: '10px', flexGrow: 1}}>
+                    <Button variant='contained' sx={{width: '100%'}} onClick={()=> selectedUser(individualUser.name)}>{individualUser.name}</Button></Typography>);
+                })}
+                </>
+                }
                   
             </Box>
 
