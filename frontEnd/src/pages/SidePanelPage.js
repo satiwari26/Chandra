@@ -5,7 +5,8 @@ import IndividualUserComponent from '../components/sidePanelComponents/Individua
 import { useTheme } from '@emotion/react';
 import {GiHamburgerMenu} from 'react-icons/gi';
 
-export const SidePanelPage = ({setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,setReceiverUserImage,setReceiverUserName,userList}) => {
+export const SidePanelPage = ({setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,
+    setGroupID,setReceiverUserImage,setReceiverUserName,userList,setPost}) => {
     const theme = useTheme();
 
     //to keep track of the device width
@@ -30,17 +31,22 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
     },[]);
 
     const conversationClick = (value)=>{
+        console.log(value.id);
         if(value.id !==0){
+            console.log('are we here?');
             setIsGroupMessage(true);
             setGroupID(value.id);
             setGroupName(value.name);
             setReceiverUserName(value.name);    //the header name will change accordingly
             setReceiverUserImage(value.avatar);
+            setPost([]);
         }
         else{
+            console.log('are we here2?');
             setIsGroupMessage(false);
             setReceiverUserName(value.name);
             setReceiverUserImage(value.avatar);
+            setPost([]);
         }
     }
 

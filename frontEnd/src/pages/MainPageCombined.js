@@ -29,6 +29,7 @@ export const MainPageCombined = () => {
     const [groupName,setGroupName] = useState('');
     const [groupMembers,setGroupMembers] = useState(['saumitra','dhruv','shrey']);
     const [groupID,setGroupID] = useState(0); //would be useful to access the specific course by their id
+    const [post,setPost] = useState([]); //store the post of groupmessage grouping and message grouping
 
     //list of the conversation
     const [coversationList,setConversationList] = useState([{name: '', avatar: chandra, id: 0}]);
@@ -157,12 +158,6 @@ export const MainPageCombined = () => {
 
     //individual message sideEffects
     useEffect(()=>{
-
-      if (groupName !== '') { //check for the state if it's a group chat or individual chat
-        setIsGroupMessage(true);
-      } else {
-        setIsGroupMessage(false);
-      }
       console.log(isGroupMessage,containsKeyword);
       if(isGroupMessage===false && containsKeyword === false){  //render this when not the group message
       if(userName !=='' && ReceiverUserName !=='' && userID !==0 && textMessage !==''){
@@ -181,7 +176,7 @@ export const MainPageCombined = () => {
     },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword,userImage]);
 
     const sidePanelProp = {setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,
-      setReceiverUserImage,setReceiverUserName,userList};
+      setReceiverUserImage,setReceiverUserName,userList, setPost};
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>
@@ -192,9 +187,9 @@ export const MainPageCombined = () => {
             <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
             <Box sx={{flexGrow: 1, overflowY: 'auto', height:'60vh'}}>
-              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userID}}/></>:
+              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userID,post,setPost}}/></>:
                 <>
-                <MessageGrouping messageProp = {{userName,ReceiverUserName,userID}}/>
+                <MessageGrouping messageProp = {{userName,ReceiverUserName,userID,post,setPost}}/>
                 </>
               }
             </Box>
