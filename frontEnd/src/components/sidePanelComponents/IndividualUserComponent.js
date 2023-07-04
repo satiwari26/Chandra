@@ -3,7 +3,10 @@ import { Avatar, Paper, Typography } from '@mui/material'
 import {IoMdArrowDropright} from 'react-icons/io';
 import React from 'react'
 
-const IndividualUserComponent = ({userImage, userName}) => {
+const IndividualUserComponent = (props) => {
+ const userName = props.name;
+  const userImage = props.avatar;
+
     const theme = useTheme();
   return (
     <Paper variant='outlined' sx={{backgroundColor: theme.palette.background.variant1, display: 'flex',
@@ -13,7 +16,7 @@ const IndividualUserComponent = ({userImage, userName}) => {
     <Avatar src={userImage} alt={userName}/>
     </Typography>
 
-     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='28px' 
+     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='25px' 
      sx={{padding: '2px', paddingLeft:'10px', flexGrow: 1}}>{userName}</Typography>
 
     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='30px' 

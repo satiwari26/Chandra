@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import MessageHeaderComponent from '../components/messageComponents/MessageHeaderComponent';
 import { Box, IconButton, Typography, } from '@mui/material';
-import userImageTest from '../assets/IMG_7265.jpg'
 import IndividualUserComponent from '../components/sidePanelComponents/IndividualUserComponent';
 import { useTheme } from '@emotion/react';
 import {GiHamburgerMenu} from 'react-icons/gi';
 
-export const SidePanelPage = ({userList,userImage,userName}) => {
+export const SidePanelPage = ({coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID}) => {
     const theme = useTheme();
 
     //to keep track of the device width
@@ -30,12 +29,13 @@ export const SidePanelPage = ({userList,userImage,userName}) => {
         });
     },[]);
 
-    //userList will contain the number of users a person is chatting with,
-    //all of thise users name, their profile pic, messages etc
-    
-    //personaInfo contains the information about your personal information
-    const userNameTest = 'Saumitra Tiwari';
-    const userIndividual = {userImageTest, userNameTest};
+    const conversationClick = (value)=>{
+        if(value.id !==0){
+            setIsGroupMessage(true);
+            setGroupID(value.id);
+            setGroupName(value.name);
+        }
+    }
 
   return (
     <>
@@ -48,12 +48,13 @@ export const SidePanelPage = ({userList,userImage,userName}) => {
         <Box sx={{overflowY: 'default', overflowX: 'hidden'}}>
         {/* top level box to store all the conversations */}
 
-
-        <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=>{console.log('clicked here')}}>
-        {/* when clicking on this user it should be able to show the conversation between you and other user */}
-        {/* most of this has to be done with the db and backend, we'll come back to it later */}
-        <IndividualUserComponent {...userIndividual} />
-        </Box>
+        {coversationList.map((value)=>{return(
+            <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=> conversationClick(value)} key={value.name}>
+            {/* when clicking on this user it should be able to show the conversation between you and other user */}
+            {/* most of this has to be done with the db and backend, we'll come back to it later */}
+            <IndividualUserComponent {...value} />
+            </Box>)}
+        )}
 
         </Box>
 
@@ -69,18 +70,19 @@ export const SidePanelPage = ({userList,userImage,userName}) => {
         <Box sx={{display: 'flex', flexDirection: 'column', minWidth: '50%', background: theme.palette.background.variant1, height: '100vh'}}>
             <IconButton onClick={()=>{setShrink(true)}}><Typography color={theme.palette.primary.messageBlue1} fontSize='20px'><GiHamburgerMenu/></Typography></IconButton>
             <Box sx={{padding: '5%',border: `2px solid ${theme.palette.background.variant2}`, display: 'flex', flexDirection: 'column'}}>
-            <MessageHeaderComponent/>
+            <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
 
             <Box sx={{overflowY: 'default', overflowX: 'hidden'}}>
             {/* top level box to store all the conversations */}
 
-
-            <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=>{console.log('clicked here')}}>
+            {coversationList.map((value)=>{return(
+            <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=> conversationClick(value)} key={value.name}>
             {/* when clicking on this user it should be able to show the conversation between you and other user */}
             {/* most of this has to be done with the db and backend, we'll come back to it later */}
-            <IndividualUserComponent {...userIndividual} />
-            </Box>
+            <IndividualUserComponent {...value} />
+            </Box>)}
+            )}
 
             </Box>
 

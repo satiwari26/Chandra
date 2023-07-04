@@ -5,17 +5,18 @@ import MessageHeaderComponent from '../components/messageComponents/MessageHeade
 import MessageGrouping from '../components/messageComponents/MessageGrouping'
 import MessageInputField from '../components/messageComponents/MessageInputField'
 import GroupMessageGrouping from '../components/messageComponents/GroupMessageGrouping'
+import axios from 'axios';
+import chandra from '../assets/chandra_static.jpg';
+
 //to create a connection of socketIO from the backend
 import io from 'socket.io-client';
-
-import chandra from '../assets/chandra_static.jpg'  //temp
 
 //creating connection to the socket server
 const socket = io.connect("http://localhost:3001");
 
 //OPEN AI api key, temporary putting it here for the use
-const open_ai_API_KEY = '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';
-const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+// const open_ai_API_KEY = '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';
+// const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 export const MainPageCombined = () => {
     const [textMessage,setTextMessage] = useState('');
@@ -27,6 +28,10 @@ export const MainPageCombined = () => {
     const [isGroupMessage,setIsGroupMessage] = useState('false');
     const [groupName,setGroupName] = useState('');
     const [groupMembers,setGroupMembers] = useState(['saumitra','dhruv','shrey']);
+    const [groupID,setGroupID] = useState(0); //would be useful to access the specific course by their id
+
+    //list of the conversation
+    const [coversationList,setConversationList] = useState([{name: '', avatar: chandra, id: 0}]);
 
     //extracting the prompt from the message, looking for the open-ai keyword
     const [containsKeyword,setContainsKeyword] = useState(false);
@@ -43,10 +48,44 @@ export const MainPageCombined = () => {
 
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
 
-  //access the usres info from the backend using canvas api
-  // useEffect(()=>{
-    
-  // });
+  //access the user info from the backend using canvas api
+  useEffect(()=>{
+    axios
+          .get(`http://localhost:3001/Chandra/self/canvas-api`)
+          .then((response) => {
+            console.log(response.data);
+            setUserName(response.data.name);
+            setUserID(response.data.id);
+            setUserImage(response.data.avatar_url);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+  },[]);
+
+  //access the course info from the canvas api and generate the list with this
+  useEffect(()=>{
+    axios
+          .get(`http://localhost:3001/Chandra/courses/canvas-api`)
+          .then((response) => {
+            // console.log(response.data);
+
+            const newArray = response.data.map((value) => {
+              if (value.name !== '' && value.name !== undefined) {
+                const parts = (value.name).split(' - ');  //access the course number and name part of the string
+                const courseName = parts[0];
+                return { name: courseName, avatar: chandra, id: value.id };
+              }
+              return null; // Ignore elements with empty or undefined name
+            }).filter((value) => value !== null); // Filter out null values
+      
+            setConversationList(() => [ ...newArray]);   
+            console.log(coversationList);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+  },[coversationList]);
 
 
 
@@ -105,74 +144,44 @@ export const MainPageCombined = () => {
       console.log(isGroupMessage,containsKeyword);
       if(isGroupMessage===false && containsKeyword === false){  //render this when not the group message
       if(userName !=='' && ReceiverUserName !=='' && userID !==0 && textMessage !==''){
-        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderID: userID, userImage: chandra}}); //we are emitting the message to the server from the client
+        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderID: userID, userImage: userImage}}); //we are emitting the message to the server from the client
       }
     }
 
       if(isGroupMessage===true && containsKeyword === false){ //render this conditionally when sending the group message
         if(groupName !== '' && textMessage !==''){
-          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderID: userID, userImage: chandra}}); //we are emitting the message to the server from the client
+          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderID: userID, userImage: userImage}}); //we are emitting the message to the server from the client
         }
       }
 
-    },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword]);
+    },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword,userImage]);
 
 
     //temp changes
-    const [tempVal,setTempVal] = useState(0);
-    const [tempValsender,setTempValsender] = useState('');
     const [tempValreceiver,setTempValreceiver] = useState('');
-    const [tempGroupName,setTempGroupName] = useState('');
     const handleSubmit = (e) => {
       e.preventDefault();
-      setUserID(tempVal);
-      setUserName(tempValsender);
       setReceiverUserName(tempValreceiver);
-      setGroupName(tempGroupName);
-    };
-  
-    const handleChange1 = (e) => {
-      const val = parseInt(e.target.value, 10);
-        setTempVal(val);
-    };
-    const handleChange2 = (e) => {
-      setTempValsender(e.target.value);
     };
     const handleChange3 = (e) => {
       setTempValreceiver(e.target.value);
     };
-    const handleChange4 = (e) => {
-      setTempGroupName(e.target.value);
-    };
 
-
+    const sidePanelProp = {coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID};
+    console.log(isGroupMessage,groupName,groupID);
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>
-        <SidePanelPage style={{height: '100vh'}}/>
+        <SidePanelPage style={{height: '100vh'}} {...sidePanelProp}/>
         <Box sx={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
 
             <>
-            {userID ===0?
+            {ReceiverUserName ===''?
             <form onSubmit={handleSubmit}>
-              <label>
-               ID:
-              <input type="ID" value={tempVal} onChange={handleChange1} />
-              </label>
-
-              <label>
-               Sender name:
-              <input type="sender's name" value={tempValsender} onChange={handleChange2} />
-              </label>
 
               <label>
                Receiver name:
               <input type="receiver's name" value={tempValreceiver} onChange={handleChange3} />
-              </label>
-
-              <label>
-               Group name:
-              <input type="Group's name" value={tempGroupName} onChange={handleChange4} />
               </label>
               
               <button type="submit">Submit</button>
