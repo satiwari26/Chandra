@@ -43,7 +43,7 @@ export const MainPageCombined = () => {
     //messageHeader &receiver info
     const [ReceiverUserImage, setReceiverUserImage] = useState('');
     const [ReceiverUserName, setReceiverUserName] = useState('');
-    const [isMessageHeader, setIsMessageHeader] = useState(true);
+    const isMessageHeader = true; //true when message header is present
     
 
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
@@ -64,13 +64,14 @@ export const MainPageCombined = () => {
   },[]);
 
   //access the course info from the canvas api and generate the list with this
+  let newCourseArray = [];
   useEffect(()=>{
     axios
           .get(`http://localhost:3001/Chandra/courses/canvas-api`)
           .then((response) => {
             // console.log(response.data);
 
-            const newArray = response.data.map((value) => {
+            newCourseArray = response.data.map((value) => {
               if (value.name !== '' && value.name !== undefined) {
                 const parts = (value.name).split(' - ');  //access the course number and name part of the string
                 const courseName = parts[0];
@@ -79,8 +80,7 @@ export const MainPageCombined = () => {
               return null; // Ignore elements with empty or undefined name
             }).filter((value) => value !== null); // Filter out null values
       
-            setConversationList(() => [ ...newArray]);   
-            console.log(coversationList);
+            setConversationList(() => [ ...newCourseArray]);
           })
           .catch((error) => {
             console.log(error);
@@ -167,8 +167,8 @@ export const MainPageCombined = () => {
       setTempValreceiver(e.target.value);
     };
 
-    const sidePanelProp = {coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID};
-    console.log(isGroupMessage,groupName,groupID);
+    const sidePanelProp = {coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,
+      setReceiverUserImage,setReceiverUserName};
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>

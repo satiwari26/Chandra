@@ -21,7 +21,7 @@ router.get('/canvas-api/:course_ID', (req, res) => {
         name: user.name,
         avatarUrl: user.avatar_url,
       }));
-      res.send(usersInfo);
+      res.send(users);
     })
     .catch(error => {
       // Handle the error

@@ -4,10 +4,14 @@ import React, { useState } from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
 
-function MessageHeaderComponent(props) {
+function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage, userName, isMessageHeader }) {
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+
+    //accessing the props accordingly
+    let displayedUserImage = userImage;
+    let displayedUserName = userName;
 
     //sidePanel menu and options for chat
     const chatMenuOptions = ['Close Chat', 'Delete Chat', 'Clear Message'];
@@ -28,16 +32,19 @@ function MessageHeaderComponent(props) {
     }
 
     //using prop value to display the name and image
-    const {userImage, userName, isMessageHeader} = props;
+    if(ReceiverUserImage && ReceiverUserName) {
+      displayedUserImage = ReceiverUserImage;
+      displayedUserName = ReceiverUserName;
+    }
 
   return (
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
     background: theme.palette.background.variant1, width:'100%', overflow: 'hidden'}}>
 
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt={userName} src={userImage}/></IconButton>
+            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt={displayedUserName} src={displayedUserImage}/></IconButton>
             <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
                     fontSize: '17px', m: '10px', width: '100%'}}>
-                    {userName}
+                    {displayedUserName}
             </Typography>
             <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={toggleDrawer(true)}><VscSettings/></IconButton>
             <SwipeableDrawer
@@ -52,12 +59,12 @@ function MessageHeaderComponent(props) {
                 }}
             >
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <img src={userImage} alt='something went wrong' 
+                <img src={displayedUserImage} alt='something went wrong' 
                     style={{borderRadius: '200px'}}
                 />
                 <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
                     fontSize: '17px', m: '10px', flexGrow: 1, width: '100%'}}>
-                    {userName}
+                    {displayedUserName}
                     </Typography>
 
                     {/* display these toggle buttons if it is a messageHeader */}
