@@ -6,17 +6,15 @@ import IndividualUserComponent from '../components/sidePanelComponents/Individua
 import { useTheme } from '@emotion/react';
 import {GiHamburgerMenu} from 'react-icons/gi';
 
-export const SidePanelPage = ({userList,personalInfo}) => {
+export const SidePanelPage = ({userList,userImage,userName}) => {
     const theme = useTheme();
 
     //to keep track of the device width
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [shrink,setShrink] = useState(true);
 
-        //messageHeader component
-        const [userImage, setUserImage] = useState('');
-        const [userName, setUserName] = useState('');
-        const [isMessageHeader, setIsMessageHeader] = useState(false);
+        //messageHeader component used as sideHeader component
+        const isMessageHeader = false;
     
         const messageHeaderProp = {userImage, userName,isMessageHeader};
 

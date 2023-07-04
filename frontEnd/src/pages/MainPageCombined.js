@@ -19,7 +19,7 @@ const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 export const MainPageCombined = () => {
     const [textMessage,setTextMessage] = useState('');
-    const [userEmail,setUserEmail] = useState(''); //to uniquely identify each user
+    const [userID,setUserID] = useState(0); //to uniquely identify each user
     const [userName,setUserName] = useState('');  //senders info
     const [userImage,setUserImage] = useState('');
 
@@ -29,7 +29,7 @@ export const MainPageCombined = () => {
     const [groupMembers,setGroupMembers] = useState(['saumitra','dhruv','shrey']);
 
     //extracting the prompt from the message, looking for the open-ai keyword
-    const [containsKeyword,setContainsKeyword] = useState(true);
+    const [containsKeyword,setContainsKeyword] = useState(false);
     // const [prompt,setPrompt] = useState('');  //to get the prompt value
 
     // const [receivedTextMessage,setReceivedTextMessage] = useState('');
@@ -43,49 +43,56 @@ export const MainPageCombined = () => {
 
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
 
-  //to make the request from the open-ai
-    useEffect(()=>{
-        //extracting the prompt from the textMessage
-        const keyword = '/open-ai';
-        const tempmessage = textMessage.trim();
-        let prompt = '';
+  //access the usres info from the backend using canvas api
+  // useEffect(()=>{
+    
+  // });
+
+
+
+  // //to make the request from the open-ai
+  //   useEffect(()=>{
+  //       //extracting the prompt from the textMessage
+  //       const keyword = '/open-ai';
+  //       const tempmessage = textMessage.trim();
+  //       let prompt = '';
       
-        if (tempmessage.startsWith(keyword.toLowerCase())) {
-        setContainsKeyword(true);
-         prompt = tempmessage.slice(keyword.length).trim(); //set the prompt state value
-        // Use the extracted prompt for further processing or API call
-        console.log('Prompt:', prompt);
-        } 
-        else {
-          setContainsKeyword(false);
-        }
+  //       if (tempmessage.startsWith(keyword.toLowerCase())) {
+  //       setContainsKeyword(true);
+  //        prompt = tempmessage.slice(keyword.length).trim(); //set the prompt state value
+  //       // Use the extracted prompt for further processing or API call
+  //       console.log('Prompt:', prompt);
+  //       } 
+  //       else {
+  //         setContainsKeyword(false);
+  //       }
 
-        const generate = async()=>{
-          try{
-            const response = await fetch(openAI_API_URL,{
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
-                Authorization: `Bearer ${open_ai_API_KEY}`
-              },
-              body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{role: "user",content: prompt}]
-              })
-            });
-            const data = await response.json()
-            console.log(data);
-          }
-          catch(error){
-            console.log("Error: ",error);
-          }
-        }
+  //       const generate = async()=>{
+  //         try{
+  //           const response = await fetch(openAI_API_URL,{
+  //             method: "POST",
+  //             headers: {
+  //               "Content-type": "application/json",
+  //               Authorization: `Bearer ${open_ai_API_KEY}`
+  //             },
+  //             body: JSON.stringify({
+  //               model: "gpt-3.5-turbo",
+  //               messages: [{role: "user",content: prompt}]
+  //             })
+  //           });
+  //           const data = await response.json()
+  //           console.log(data);
+  //         }
+  //         catch(error){
+  //           console.log("Error: ",error);
+  //         }
+  //       }
 
-        if(containsKeyword){
-        generate(); //calling my function to generate the response
-      }
+  //       if(containsKeyword){
+  //       generate(); //calling my function to generate the response
+  //     }
 
-    },[textMessage,containsKeyword]);
+  //   },[textMessage,containsKeyword]);
 
     //individual message sideEffects
     useEffect(()=>{
@@ -95,37 +102,38 @@ export const MainPageCombined = () => {
       } else {
         setIsGroupMessage(false);
       }
-
+      console.log(isGroupMessage,containsKeyword);
       if(isGroupMessage===false && containsKeyword === false){  //render this when not the group message
-      if(userName !=='' && ReceiverUserName !=='' && userEmail !=='' && textMessage !==''){
-        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderEmail: userEmail, userImage: chandra}}); //we are emitting the message to the server from the client
+      if(userName !=='' && ReceiverUserName !=='' && userID !==0 && textMessage !==''){
+        socket.emit('sendChatMessage',{sender: userName, receiver: ReceiverUserName, content: {message: textMessage, senderID: userID, userImage: chandra}}); //we are emitting the message to the server from the client
       }
     }
 
       if(isGroupMessage===true && containsKeyword === false){ //render this conditionally when sending the group message
         if(groupName !== '' && textMessage !==''){
-          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderEmail: userEmail, userImage: chandra}}); //we are emitting the message to the server from the client
+          socket.emit('sendGroupChatMessage',{groupName: groupName, members: groupMembers, content: {user: userName, message: textMessage, senderID: userID, userImage: chandra}}); //we are emitting the message to the server from the client
         }
       }
 
-    },[textMessage,ReceiverUserName,userEmail,userName,groupMembers,groupName,isGroupMessage,containsKeyword]);
+    },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword]);
 
 
     //temp changes
-    const [tempVal,setTempVal] = useState('');
+    const [tempVal,setTempVal] = useState(0);
     const [tempValsender,setTempValsender] = useState('');
     const [tempValreceiver,setTempValreceiver] = useState('');
     const [tempGroupName,setTempGroupName] = useState('');
     const handleSubmit = (e) => {
       e.preventDefault();
-      setUserEmail(tempVal);
+      setUserID(tempVal);
       setUserName(tempValsender);
       setReceiverUserName(tempValreceiver);
       setGroupName(tempGroupName);
     };
   
     const handleChange1 = (e) => {
-        setTempVal(e.target.value);
+      const val = parseInt(e.target.value, 10);
+        setTempVal(val);
     };
     const handleChange2 = (e) => {
       setTempValsender(e.target.value);
@@ -145,11 +153,11 @@ export const MainPageCombined = () => {
         <Box sx={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
 
             <>
-            {userEmail ===''?
+            {userID ===0?
             <form onSubmit={handleSubmit}>
               <label>
-               Email:
-              <input type="email" value={tempVal} onChange={handleChange1} />
+               ID:
+              <input type="ID" value={tempVal} onChange={handleChange1} />
               </label>
 
               <label>
@@ -175,9 +183,9 @@ export const MainPageCombined = () => {
             <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
             <Box sx={{flexGrow: 1, overflowY: 'auto', height:'60vh'}}>
-              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userEmail}}/></>:
+              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userID}}/></>:
                 <>
-                <MessageGrouping messageProp = {{userName,ReceiverUserName,userEmail}}/>
+                <MessageGrouping messageProp = {{userName,ReceiverUserName,userID}}/>
                 </>
               }
             </Box>

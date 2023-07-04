@@ -10,7 +10,7 @@ function GroupMessageGrouping(props) {
   const [post,setPost] = useState([]);
 
   const groupName = props.messageProp.groupName;
-  const userEmail = props.messageProp.userEmail;
+  const userID = props.messageProp.userID;
 
   useEffect(()=>{
     const fetchData = () => {
@@ -36,7 +36,7 @@ function GroupMessageGrouping(props) {
       clearInterval(interval);
     };
 
-  },[groupName,userEmail,post]);
+  },[groupName,userID,post]);
       
     // console.log(props.messageProp);
   return (
@@ -45,7 +45,7 @@ function GroupMessageGrouping(props) {
     {/* {console.log(post)} */}
     {post.message === 'Group Conversation exists' && post.group.content && Array.isArray(post.group.content) && (post.group.content).slice().reverse().map((individualPost,index)=>{return(
       <React.Fragment key={index}>
-        {individualPost.email === userEmail? <UserIndividualMessageSend textMessage = {{message: individualPost.message, userImage: individualPost.userImage}} />:
+        {individualPost.id === userID? <UserIndividualMessageSend textMessage = {{message: individualPost.message, userImage: individualPost.userImage}} />:
         <UserindividualMessageReceived textMessage = {{message: individualPost.message, userImage: individualPost.userImage}}/>}
       </React.Fragment>
     )})}

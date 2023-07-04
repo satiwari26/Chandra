@@ -14,8 +14,8 @@ const ConversationSchema = new mongoose.Schema({
           type: String,
           required: true
         },
-        email: {  //will check if the user is you or someone else
-          type: String,
+        id: {  //will check if the user is you or someone else
+          type: Number,
           required: true
         },
         userImage: {
@@ -30,4 +30,4 @@ const ConversationSchema = new mongoose.Schema({
 });
 
 //need to compile our schema into an actual model
-module.exports = mongoose.model('ConversationPro',ConversationSchema);
+module.exports = mongoose.model('ConversationPro1',ConversationSchema);

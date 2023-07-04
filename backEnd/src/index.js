@@ -10,6 +10,11 @@ const express = require('express');
  //importing the conversation router
  const conversationRouter = require('./routes/Conversation');
 
+ //importing the canvasAPI router
+ const canvasAPIRouter = require('./routes/CanvasApi');
+ const canvasAPICourseRouter = require('./routes/CanvasCourses');
+ const UserInCourses = require('./routes/UsersInCourses');
+
  //importing the groupConversation router
  const groupConversationRouter = require('./routes/GroupConversation');
 
@@ -33,6 +38,10 @@ app.use(cors());
 //letting the app know about the conversation Router and prefix endpoint using middleware
 app.use('/Chandra/conversation',conversationRouter);
 app.use('/Chandra/groupConversation',groupConversationRouter);
+//canvas apis
+app.use('/Chandra/self',canvasAPIRouter);
+app.use('/Chandra/courses',canvasAPICourseRouter);
+app.use('/Chandra/courseUsers',UserInCourses);
 
 
 //create the http serve that socket io uses to work with
@@ -56,7 +65,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
 
     socket.on('sendChatMessage',(newMessage)=>{  //we are adding listner to the server so it is listening to
       //individual messages that we sent from the client
-      // console.log(newMessage);
+      console.log(newMessage);
       
       Conversation.findOne({
         $or: [
@@ -67,7 +76,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
           if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
             existingConversation.content.push({
               message: newMessage.content.message,
-              email: newMessage.content.senderEmail,
+              id: newMessage.content.senderID,
               userImage: newMessage.content.userImage
             });
 
@@ -87,7 +96,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
                   Receiver: newMessage.receiver,
                   content: [{
                     message: newMessage.content.message,
-                    email: newMessage.content.senderEmail,
+                    id: newMessage.content.senderID,
                     userImage: newMessage.content.userImage
                   }]
                 });
@@ -121,7 +130,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
           existingConversation.content.push({
             user: newMessage.content.user,
             message: newMessage.content.message,
-            email: newMessage.content.senderEmail,
+            id: newMessage.content.senderID,
             userImage: newMessage.content.userImage
           });
 
@@ -141,7 +150,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
             content: [{
               user: newMessage.content.user,
               message: newMessage.content.message,
-              email: newMessage.content.senderEmail,
+              id: newMessage.content.senderID,
               userImage: newMessage.content.userImage
             }]
           });

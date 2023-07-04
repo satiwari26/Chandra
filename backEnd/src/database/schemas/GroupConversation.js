@@ -19,8 +19,8 @@ const GroupConversationSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      email: {
-        type: String,
+      id: {
+        type: Number,
         required: true,
       },
       userImage: {
@@ -36,4 +36,4 @@ const GroupConversationSchema = new mongoose.Schema({
   
 
 //need to compile our schema into an actual model
-module.exports = mongoose.model('groupConversationPro',GroupConversationSchema);
+module.exports = mongoose.model('groupConversationPro1',GroupConversationSchema);
