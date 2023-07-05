@@ -6,7 +6,7 @@ import { useTheme } from '@emotion/react';
 import {GiHamburgerMenu} from 'react-icons/gi';
 
 export const SidePanelPage = ({setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,
-    setGroupID,setReceiverUserImage,setReceiverUserName,userList,setPost}) => {
+    setGroupID,setReceiverUserImage,setReceiverUserName,userList,setIsDefaultPage}) => {
     const theme = useTheme();
 
     //to keep track of the device width
@@ -16,7 +16,7 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
         //messageHeader component used as sideHeader component
         const isMessageHeader = false;
     
-        const messageHeaderProp = {userImage, userName,isMessageHeader,userList,setReceiverUserName,setConversationList};
+        const messageHeaderProp = {userImage, userName,isMessageHeader,userList,setReceiverUserName,setConversationList,setIsDefaultPage};
 
     useEffect(()=>{
         const handleWidthSize = ()=>{
@@ -39,14 +39,14 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
             setGroupName(value.name);
             setReceiverUserName(value.name);    //the header name will change accordingly
             setReceiverUserImage(value.avatar);
-            setPost([]);
+            setIsDefaultPage(false);    //remove turn off the default page viewing
         }
         else{
             console.log('are we here2?');
             setIsGroupMessage(false);
             setReceiverUserName(value.name);
             setReceiverUserImage(value.avatar);
-            setPost([]);
+            setIsDefaultPage(false);    //remove turn off the default page viewing
         }
     }
 

@@ -10,6 +10,7 @@ import chandra from '../assets/chandra_static.jpg';
 
 //to create a connection of socketIO from the backend
 import io from 'socket.io-client';
+import DefaultPageBlank from './DefaultPageBlank/DefaultPageBlank'
 
 //creating connection to the socket server
 const socket = io.connect("http://localhost:3001");
@@ -29,7 +30,6 @@ export const MainPageCombined = () => {
     const [groupName,setGroupName] = useState('');
     const [groupMembers,setGroupMembers] = useState(['saumitra','dhruv','shrey']);
     const [groupID,setGroupID] = useState(0); //would be useful to access the specific course by their id
-    const [post,setPost] = useState([]); //store the post of groupmessage grouping and message grouping
 
     //list of the conversation
     const [coversationList,setConversationList] = useState([{name: '', avatar: chandra, id: 0}]);
@@ -39,8 +39,8 @@ export const MainPageCombined = () => {
     const [containsKeyword,setContainsKeyword] = useState(false);
     // const [prompt,setPrompt] = useState('');  //to get the prompt value
 
-    // const [receivedTextMessage,setReceivedTextMessage] = useState('');
-    // const [messageState, setMessageState] = useState(false);
+    //default page view
+    const [isDefaultPage,setIsDefaultPage] = useState(true);
 
     //messageHeader &receiver info
     const [ReceiverUserImage, setReceiverUserImage] = useState('');
@@ -176,20 +176,21 @@ export const MainPageCombined = () => {
     },[textMessage,ReceiverUserName,userID,userName,groupMembers,groupName,isGroupMessage,containsKeyword,userImage]);
 
     const sidePanelProp = {setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,setGroupID,
-      setReceiverUserImage,setReceiverUserName,userList, setPost};
+      setReceiverUserImage,setReceiverUserName,userList,setIsDefaultPage};
 
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>
         <SidePanelPage style={{height: '100vh'}} {...sidePanelProp}/>
+      {isDefaultPage  ? <DefaultPageBlank/> :
         <Box sx={{display: 'flex', flexDirection: 'column', flexGrow: 1}}>
 
             <Box sx={{height: '10%', minWidth: '100%'}}>
             <MessageHeaderComponent {...messageHeaderProp}/>
             </Box>
             <Box sx={{flexGrow: 1, overflowY: 'auto', height:'60vh'}}>
-              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userID,post,setPost}}/></>:
+              {isGroupMessage?<><GroupMessageGrouping messageProp = {{groupName,userID}}/></>:
                 <>
-                <MessageGrouping messageProp = {{userName,ReceiverUserName,userID,post,setPost}}/>
+                <MessageGrouping messageProp = {{userName,ReceiverUserName,userID}}/>
                 </>
               }
             </Box>
@@ -198,6 +199,7 @@ export const MainPageCombined = () => {
                 <MessageInputField setText = {setTextMessage}/>
             </Box>
         </Box>
+      }
 
     </Box>
   )

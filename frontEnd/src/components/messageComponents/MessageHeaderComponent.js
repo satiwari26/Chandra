@@ -5,16 +5,19 @@ import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
 import chandra from '../../assets/chandra_static.jpg';
 
-function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage, userName, isMessageHeader, userList,setReceiverUserName,setConversationList }) {
+function MessageHeaderComponent(props) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+
+    const { ReceiverUserImage, ReceiverUserName, userImage, userName, isMessageHeader, 
+      userList,setReceiverUserName,setConversationList } = props;
 
     //accessing the props accordingly
     let displayedUserImage = userImage;
     let displayedUserName = userName;
 
     //sidePanel menu and options for chat
-    const chatMenuOptions = ['Close Chat', 'Delete Chat', 'Clear Message'];
+    const chatMenuOptions = ['Close Chat'];
 
     //drawer handler
     const toggleDrawer = (toggledVal)=>{
@@ -51,7 +54,7 @@ function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage
                     fontSize: '17px', m: '10px', width: '100%'}}>
                     {displayedUserName}
             </Typography>
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={toggleDrawer(true)}><VscSettings/></IconButton>
+            <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={()=>{toggleDrawer(true)}}><VscSettings/></IconButton>
             <SwipeableDrawer
                 anchor="right"
                 open={open}
@@ -77,7 +80,7 @@ function MessageHeaderComponent({ ReceiverUserImage, ReceiverUserName, userImage
                 {chatMenuOptions.map((menuVal)=>{
                     return(<Typography key={menuVal} color={theme.palette.primary.messageBlue2} sx = {{justifyContent: 'flex-start',
                     fontSize: '17px', m: '10px', flexGrow: 1}}>
-                    <Button variant='contained' sx={{width: '100%'}}>{menuVal}</Button></Typography>);
+                    <Button variant='contained' sx={{width: '100%'}} >{menuVal}</Button></Typography>);
                 })}
                 </>:
                 <>

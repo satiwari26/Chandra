@@ -7,13 +7,11 @@ import axios from 'axios';
 
 function MessageGrouping(props) {
 
-  // const [post,setPost] = useState([]);
+  const [post,setPost] = useState([]);
 
   const userName =  props.messageProp.userName;
   const ReceiverUserName = props.messageProp.ReceiverUserName;
   const userID = props.messageProp.userID;
-  const post = props.messageProp.post;
-  const setPost = props.messageProp.setPost;
 
   useEffect(()=>{
     const fetchData = () => {

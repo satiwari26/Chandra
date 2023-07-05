@@ -16,7 +16,7 @@ const IndividualUserComponent = (props) => {
     <Avatar src={userImage} alt={userName}/>
     </Typography>
 
-     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='25px' 
+     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='22px' 
      sx={{padding: '2px', paddingLeft:'10px', flexGrow: 1}}>{userName}</Typography>
 
     <Typography variant="messages" color={theme.palette.primary.messageBlue1} fontSize='30px' 
