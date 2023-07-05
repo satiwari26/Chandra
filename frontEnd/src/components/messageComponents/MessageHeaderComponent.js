@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {VscSettings} from 'react-icons/vsc';
 import {SwipeableDrawer} from '@mui/material';
 import chandra from '../../assets/chandra_static.jpg';
+import {motion} from 'framer-motion';
 
 function MessageHeaderComponent(props) {
     const theme = useTheme();
@@ -49,12 +50,12 @@ function MessageHeaderComponent(props) {
     <Box sx = {{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', 
     background: theme.palette.background.variant1, width:'100%', overflow: 'hidden'}}>
 
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><Avatar alt={displayedUserName} src={displayedUserImage}/></IconButton>
+            <IconButton sx = {{color: theme.palette.primary.messageBlue2, }} onClick={toggleDrawer(true)}><motion.div whileHover={{ scale: 1.5 }}><Avatar alt={displayedUserName} src={displayedUserImage}/></motion.div></IconButton>
             <Typography color={theme.palette.primary.light} sx = {{justifyContent: 'flex-start',
                     fontSize: '17px', m: '10px', width: '100%'}}>
                     {displayedUserName}
             </Typography>
-            <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={()=>{toggleDrawer(true)}}><VscSettings/></IconButton>
+            {/* <IconButton sx = {{color: theme.palette.primary.messageBlue2, flexGrow: 1}} onClick={()=>{toggleDrawer(true)}}><VscSettings/></IconButton> */}
             <SwipeableDrawer
                 anchor="right"
                 open={open}

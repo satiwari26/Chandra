@@ -4,6 +4,7 @@ import { Box, IconButton, Typography, } from '@mui/material';
 import IndividualUserComponent from '../components/sidePanelComponents/IndividualUserComponent';
 import { useTheme } from '@emotion/react';
 import {GiHamburgerMenu} from 'react-icons/gi';
+import {motion} from 'framer-motion';
 
 export const SidePanelPage = ({setConversationList,coversationList,userImage,userName,setIsGroupMessage,setGroupName,
     setGroupID,setReceiverUserImage,setReceiverUserName,userList,setIsDefaultPage}) => {
@@ -65,7 +66,7 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
             <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=> conversationClick(value)} key={value.name}>
             {/* when clicking on this user it should be able to show the conversation between you and other user */}
             {/* most of this has to be done with the db and backend, we'll come back to it later */}
-            <IndividualUserComponent {...value} />
+            <motion.div whileHover={{ scale: 1.1 }}><IndividualUserComponent {...value} /></motion.div>
             </Box>)}
         )}
 
