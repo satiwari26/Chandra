@@ -18,6 +18,9 @@ const express = require('express');
  //importing the groupConversation router
  const groupConversationRouter = require('./routes/GroupConversation');
 
+ //importing the userAuth router
+ const userAuthRouter = require('./routes/UserAuth');
+
 const session = require('express-session');
 
 //app is now the instance of the express 
@@ -42,6 +45,8 @@ app.use('/Chandra/groupConversation',groupConversationRouter);
 app.use('/Chandra/self',canvasAPIRouter);
 app.use('/Chandra/courses',canvasAPICourseRouter);
 app.use('/Chandra/courseUsers',UserInCourses);
+//authentication
+app.use('/Chandra/authentication',userAuthRouter);
 
 
 //create the http serve that socket io uses to work with

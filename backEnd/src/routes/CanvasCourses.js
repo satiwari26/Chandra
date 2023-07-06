@@ -2,7 +2,6 @@ const {Router} = require('express');
 const axios = require('axios');
 const canvas_API_KEY = require('./Canvas_token.js');
 
-
 const router = Router(); //creating the router to handle my canvas api req
 
 router.get('/canvas-api', (req, res) => {
