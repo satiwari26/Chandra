@@ -31,6 +31,17 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
         });
     },[]);
 
+    const sidePanelHover = {
+        normal: {
+          scale: 1,
+          backgroundColor: 'transparent',
+        },
+        hover: {
+          scale: 1.05,
+          boxShadow: `0px 8px 4px ${theme.palette.primary.messageBlue1}`
+        },
+    }
+
     const conversationClick = (value)=>{
         console.log(value.id);
         if(value.id !==0){
@@ -63,10 +74,10 @@ export const SidePanelPage = ({setConversationList,coversationList,userImage,use
         {/* top level box to store all the conversations */}
 
         {coversationList.map((value)=>{return(
-            <Box sx={{cursor: 'pointer' , userSelect: 'none'}} onClick = {()=> conversationClick(value)} key={value.name}>
+            <Box sx={{cursor: 'pointer' , userSelect: 'none', mt: '4px'}} onClick = {()=> conversationClick(value)} key={value.name}>
             {/* when clicking on this user it should be able to show the conversation between you and other user */}
             {/* most of this has to be done with the db and backend, we'll come back to it later */}
-            <motion.div whileHover={{ scale: 1.1 }}><IndividualUserComponent {...value} /></motion.div>
+            <motion.div variants={sidePanelHover} whileHover="hover" initial="normal"><IndividualUserComponent {...value} /></motion.div>
             </Box>)}
         )}
 

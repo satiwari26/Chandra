@@ -19,7 +19,7 @@ const socket = io.connect("http://localhost:3001");
 // const open_ai_API_KEY = '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';
 // const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
-export const MainPageCombined = () => {
+export const MainPageCombined = ({signUserName,SignUserEmail,SignUserToken}) => {
     const [textMessage,setTextMessage] = useState('');
     const [userID,setUserID] = useState(0); //to uniquely identify each user
     const [userName,setUserName] = useState('');  //senders info
@@ -50,10 +50,22 @@ export const MainPageCombined = () => {
 
     const messageHeaderProp = {ReceiverUserImage, ReceiverUserName,isMessageHeader};
 
+    //storing the user info, including the name, email, token
+    useEffect(() => {
+      axios
+          .get(`http://localhost:3001/Chandra/authentication/userInfo/${signUserName}/${SignUserEmail}/${SignUserToken}`)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    },[]);
+
   //access the user info from the backend using canvas api
   useEffect(()=>{
     axios
-          .get(`http://localhost:3001/Chandra/self/canvas-api`)
+          .get(`http://localhost:3001/Chandra/self/canvas-api/${SignUserEmail}`)
           .then((response) => {
             setUserName(response.data.name);
             setUserID(response.data.id);
@@ -68,7 +80,7 @@ export const MainPageCombined = () => {
   useEffect(()=>{
     let newCourseArray = [];
     axios
-          .get(`http://localhost:3001/Chandra/courses/canvas-api`)
+          .get(`http://localhost:3001/Chandra/courses/canvas-api/${SignUserEmail}`)
           .then((response) => {
             // console.log(response.data);
 
@@ -87,7 +99,7 @@ export const MainPageCombined = () => {
             newCourseArray.forEach((value) => {
               if(value.name !==undefined){
               axios
-                .get(`http://localhost:3001/Chandra/courseUsers/canvas-api/${value.id}`)
+                .get(`http://localhost:3001/Chandra/courseUsers/canvas-api/${SignUserEmail}/${value.id}`)
                 .then((response) => {
                   // console.log(response.data);
                   setUserList((prevUserList) => [...prevUserList, ...response.data]);
