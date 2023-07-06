@@ -1,19 +1,26 @@
 const { Router } = require('express');
 const axios = require('axios');
-const canvas_API_KEY = require('./Canvas_token.js');
+const userAuth = require('../database/schemas/UserAuth.js');
+// const canvas_API_KEY = require('./Canvas_token.js');
 
 
 const router = Router();
 
-router.get('/canvas-api/:course_ID', (req, res) => {
-    const {course_ID} = req.params;
+router.get('/canvas-api/:userEmail/:course_ID', (req, res) => {
+    const {userEmail,course_ID} = req.params;
   const url = `https://canvas.calpoly.edu/api/v1/courses/${course_ID}/students`;
 
-  axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${canvas_API_KEY}`,
-    },
-  })
+  userAuth.findOne({ email: userEmail }) // Replace userEmail with the user's email
+    .then(userInfo => {
+      if (!userInfo) {
+        throw new Error('User not found'); // Handle the case where the user is not found
+      }
+
+    axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`,
+      },
+    })
     .then(response => {
       // Handle the response data
       const users = response.data;
@@ -23,6 +30,11 @@ router.get('/canvas-api/:course_ID', (req, res) => {
       }));
       res.send(users);
     })
+    .catch(error => {
+      // Handle the error
+      res.status(500).send(error.message);
+    });
+  })
     .catch(error => {
       // Handle the error
       res.status(500).send(error.message);
