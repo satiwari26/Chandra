@@ -1,5 +1,15 @@
 const express = require('express');
 
+//importing the google auth library and generating the client id
+const { TextServiceClient } = require("@google-ai/generativelanguage").v1beta2;
+const { GoogleAuth } = require("google-auth-library");
+const MODEL_NAME = "models/text-bison-001";
+const API_KEY = '';
+//defining the client
+const client = new TextServiceClient({
+  authClient: new GoogleAuth().fromAPIKey(API_KEY),
+});
+
 //importing data base files
  require('./database');
  const Conversation = require('./database/schemas/Conversation');
@@ -71,7 +81,87 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
     socket.on('sendChatMessage',(newMessage)=>{  //we are adding listner to the server so it is listening to
       //individual messages that we sent from the client
       console.log(newMessage);
+
+      const keyword = '/google';
+        const tempmessage = newMessage.content.message.trim();
+        let prompt = '';
+        if (tempmessage.startsWith(keyword.toLowerCase())) {
+         prompt = tempmessage.slice(keyword.length).trim();
+        // Use the extracted prompt for further processing or API call
+        console.log('Prompt:', prompt);
+        
+        client
+          .generateText({
+            model: MODEL_NAME,
+            prompt: {
+              text: prompt,
+            },
+          })
+          .then((result) => {
+            console.log(JSON.stringify(result[0]?.candidates?.[0]?.output));
+            //set the message to generated text
+            newMessage.content.message = JSON.stringify(result[0]?.candidates?.[0]?.output);
+            newMessage.content.userImage = 'https://w7.pngwing.com/pngs/249/19/png-transparent-google-logo-g-suite-google-guava-google-plus-company-text-logo.png';
+            newMessage.content.senderID = 0;
+            
+            Conversation.findOne({
+              $or: [
+                {Sender: newMessage.sender, Receiver: newMessage.receiver},
+                {Sender: newMessage.receiver, Receiver: newMessage.sender}
+              ],
+            }).then((existingConversation) => {
+                if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
+                  // console.log(newMessage.content.message);
+                  existingConversation.content.push({
+                    message: newMessage.content.message,
+                    id: newMessage.content.senderID,
+                    userImage: newMessage.content.userImage
+                  });
       
+                  //save the updated conversation
+                  existingConversation.save().then((updatedConversation)=>{
+                    console.log('Conversation updated:', updatedConversation);
+                  })
+                  .catch((error) => {
+                    console.log('Error updating conversation:', error);
+                  });
+      
+                }
+      
+                else{ //if conversation doesn't exist
+                      const newConversation = new Conversation({
+                        Sender: newMessage.sender,
+                        Receiver: newMessage.receiver,
+                        content: [{
+                          message: newMessage.content.message,
+                          id: newMessage.content.senderID,
+                          userImage: newMessage.content.userImage
+                        }]
+                      });
+      
+                      
+                    // Save the new conversation
+                    newConversation.save()
+                    .then((savedConversation) => {
+                      console.log('Conversation saved:', savedConversation);
+                    })
+                    .catch((error) => {
+                      console.log('Error saving conversation:', error);
+                    });
+      
+                }
+      
+            }).catch((error) => {
+              console.log('Error finding conversation:', error);
+            });
+
+          })
+          .catch((error) => {
+            console.error('Error generating text:', error);
+          });
+        }
+      
+      else{
       Conversation.findOne({
         $or: [
           {Sender: newMessage.sender, Receiver: newMessage.receiver},
@@ -79,6 +169,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
         ],
       }).then((existingConversation) => {
           if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
+            console.log(newMessage.content.message);
             existingConversation.content.push({
               message: newMessage.content.message,
               id: newMessage.content.senderID,
@@ -87,7 +178,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
 
             //save the updated conversation
             existingConversation.save().then((updatedConversation)=>{
-              console.log('Conversation updated:', updatedConversation);
+              // console.log('Conversation updated:', updatedConversation);
             })
             .catch((error) => {
               console.log('Error updating conversation:', error);
@@ -121,6 +212,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
       }).catch((error) => {
         console.log('Error finding conversation:', error);
       });
+    }
 
           //to send the message to everyone that is on this server, except to the one that is sending this message
         // socket.broadcast.emit('chatMessage',message);
@@ -129,52 +221,128 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
 
     //adding another listner that is going to listent to groupMessages sent from the client
     socket.on('sendGroupChatMessage',(newMessage)=>{
-      groupConversation.findOne({GroupName: newMessage.groupName})
-      .then((existingConversation) => {
-        if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
-          existingConversation.content.push({
-            user: newMessage.content.user,
-            message: newMessage.content.message,
-            id: newMessage.content.senderID,
-            userImage: newMessage.content.userImage
-          });
 
-          //save the updated conversation
-          existingConversation.save().then((updatedConversation)=>{
-            console.log('Conversation updated:', updatedConversation);
+      const keyword = '/google';
+        const tempmessage = newMessage.content.message.trim();
+        let prompt = '';
+        if (tempmessage.startsWith(keyword.toLowerCase())) {
+         prompt = tempmessage.slice(keyword.length).trim();
+        // Use the extracted prompt for further processing or API call
+        console.log('Prompt:', prompt);
+        
+        client
+          .generateText({
+            model: MODEL_NAME,
+            prompt: {
+              text: prompt,
+            },
           })
-          .catch((error) => {
-            console.log('Error updating conversation:', error);
-          });
-
-        }
-        else{ //if conversation doesn't exist
-          const newGroupConversation = new groupConversation({
-            GroupName: newMessage.groupName,
-            Members: newMessage.members,
-            content: [{
-              user: newMessage.content.user,
-              message: newMessage.content.message,
-              id: newMessage.content.senderID,
-              userImage: newMessage.content.userImage
-            }]
-          });
-
+          .then((result) => {
+            console.log(JSON.stringify(result[0]?.candidates?.[0]?.output));
+            //set the message to generated text
+            newMessage.content.message = JSON.stringify(result[0]?.candidates?.[0]?.output);
+            newMessage.content.userImage = 'https://w7.pngwing.com/pngs/249/19/png-transparent-google-logo-g-suite-google-guava-google-plus-company-text-logo.png';
+            newMessage.content.senderID = 0;
+            newMessage.content.user = 'Google';
           
-        // Save the new conversation
-        newGroupConversation.save()
-        .then((savedConversation) => {
-          console.log('Conversation saved:', savedConversation);
-        })
-        .catch((error) => {
-          console.log('Error saving conversation:', error);
-        });
-    }
+            groupConversation.findOne({GroupName: newMessage.groupName})
+            .then((existingConversation) => {
+              if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
+                existingConversation.content.push({
+                  user: newMessage.content.user,
+                  message: newMessage.content.message,
+                  id: newMessage.content.senderID,
+                  userImage: newMessage.content.userImage
+                });
       
-      }).catch((error) => {
-        console.log('Error finding conversation:', error);
-      });
+                //save the updated conversation
+                existingConversation.save().then((updatedConversation)=>{
+                  console.log('Conversation updated:', updatedConversation);
+                })
+                .catch((error) => {
+                  console.log('Error updating conversation:', error);
+                });
       
+              }
+              else{ //if conversation doesn't exist
+                const newGroupConversation = new groupConversation({
+                  GroupName: newMessage.groupName,
+                  Members: newMessage.members,
+                  content: [{
+                    user: newMessage.content.user,
+                    message: newMessage.content.message,
+                    id: newMessage.content.senderID,
+                    userImage: newMessage.content.userImage
+                  }]
+                });
+      
+                
+              // Save the new conversation
+              newGroupConversation.save()
+              .then((savedConversation) => {
+                console.log('Conversation saved:', savedConversation);
+              })
+              .catch((error) => {
+                console.log('Error saving conversation:', error);
+              });
+          }
+            
+            }).catch((error) => {
+              console.log('Error finding conversation:', error);
+            });
+          
+          })
+        }
+
+      else{
+
+          groupConversation.findOne({GroupName: newMessage.groupName})
+          .then((existingConversation) => {
+            if(existingConversation){//if there exist a conversation schema we want to append messages to it's array
+              existingConversation.content.push({
+                user: newMessage.content.user,
+                message: newMessage.content.message,
+                id: newMessage.content.senderID,
+                userImage: newMessage.content.userImage
+              });
+
+              //save the updated conversation
+              existingConversation.save().then((updatedConversation)=>{
+                console.log('Conversation updated:', updatedConversation);
+              })
+              .catch((error) => {
+                console.log('Error updating conversation:', error);
+              });
+
+            }
+            else{ //if conversation doesn't exist
+              const newGroupConversation = new groupConversation({
+                GroupName: newMessage.groupName,
+                Members: newMessage.members,
+                content: [{
+                  user: newMessage.content.user,
+                  message: newMessage.content.message,
+                  id: newMessage.content.senderID,
+                  userImage: newMessage.content.userImage
+                }]
+              });
+
+              
+            // Save the new conversation
+            newGroupConversation.save()
+            .then((savedConversation) => {
+              console.log('Conversation saved:', savedConversation);
+            })
+            .catch((error) => {
+              console.log('Error saving conversation:', error);
+            });
+        }
+          
+          }).catch((error) => {
+            console.log('Error finding conversation:', error);
+          });
+        }
+
     });
 });
 

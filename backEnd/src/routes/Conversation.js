@@ -15,9 +15,9 @@ route.get('/:userName/:receiverName', (req,res)=>{
       })
         .then(conversation => {
           if (conversation) {
-            // console.log(conversation);
             // Conversation exists
             res.json({ message: 'Conversation exists', conversation });
+
           } else {
             // Conversation does not exist
             res.json({ message: 'Conversation does not exist' });

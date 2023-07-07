@@ -8,6 +8,11 @@ import GroupMessageGrouping from '../components/messageComponents/GroupMessageGr
 import axios from 'axios';
 import chandra from '../assets/chandra_static.jpg';
 
+//google library for generativeLanguageModel
+// const { TextServiceClient } = require("@google-ai/generativelanguage").v1beta2;
+// const { GoogleAuth } = require("google-auth-library");
+
+
 //to create a connection of socketIO from the backend
 import io from 'socket.io-client';
 import DefaultPageBlank from './DefaultPageBlank/DefaultPageBlank'
@@ -18,6 +23,11 @@ const socket = io.connect("http://localhost:3001");
 //OPEN AI api key, temporary putting it here for the use
 // const open_ai_API_KEY = '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';
 // const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+
+//google api_url
+const MODEL_NAME = "models/text-bison-001";
+const API_KEY = 'AIzaSyByVHGGusvqKFTtt4aE271R-PkIY4VHbqY';
+const API_URL = `https://text.googleapis.com/v1beta2/projects/-/locations/global/models/${MODEL_NAME}:generateText`;
 
 export const MainPageCombined = ({signUserName,SignUserEmail,SignUserToken}) => {
     const [textMessage,setTextMessage] = useState('');
@@ -124,49 +134,39 @@ export const MainPageCombined = ({signUserName,SignUserEmail,SignUserToken}) => 
 
 
 
-  // //to make the request from the open-ai
-  //   useEffect(()=>{
-  //       //extracting the prompt from the textMessage
-  //       const keyword = '/open-ai';
-  //       const tempmessage = textMessage.trim();
-  //       let prompt = '';
+  //to make the request from the google generativeModel
+    // useEffect(()=>{
+    //     const url = `${API_URL}?key=${API_KEY}`;
+    //     //extracting the prompt from the textMessage
+    //     const keyword = '/chandra';
+    //     const tempmessage = textMessage.trim();
+    //     let prompt = '';
       
-  //       if (tempmessage.startsWith(keyword.toLowerCase())) {
-  //       setContainsKeyword(true);
-  //        prompt = tempmessage.slice(keyword.length).trim(); //set the prompt state value
-  //       // Use the extracted prompt for further processing or API call
-  //       console.log('Prompt:', prompt);
-  //       } 
-  //       else {
-  //         setContainsKeyword(false);
-  //       }
+    //     if (tempmessage.startsWith(keyword.toLowerCase())) {
+    //     setContainsKeyword(true);
+    //      prompt = tempmessage.slice(keyword.length).trim(); //set the prompt state value
+    //     // Use the extracted prompt for further processing or API call
+    //     console.log('Prompt:', prompt);
+    //     } 
+    //     else {
+    //       setContainsKeyword(false);
+    //     }
 
-  //       const generate = async()=>{
-  //         try{
-  //           const response = await fetch(openAI_API_URL,{
-  //             method: "POST",
-  //             headers: {
-  //               "Content-type": "application/json",
-  //               Authorization: `Bearer ${open_ai_API_KEY}`
-  //             },
-  //             body: JSON.stringify({
-  //               model: "gpt-3.5-turbo",
-  //               messages: [{role: "user",content: prompt}]
-  //             })
-  //           });
-  //           const data = await response.json()
-  //           console.log(data);
-  //         }
-  //         catch(error){
-  //           console.log("Error: ",error);
-  //         }
-  //       }
+    //     const generate = async()=>{
+    //       try {
+    //         const response = await axios.post(url, { prompt });
+    //         return console.log(response.data);
+    //       } catch (error) {
+    //         console.error('Error generating text:', error);
+    //         throw error;
+    //       }
+    //     }
 
-  //       if(containsKeyword){
-  //       generate(); //calling my function to generate the response
-  //     }
+    //     if(containsKeyword){
+    //     generate(); //calling my function to generate the response
+    //   }
 
-  //   },[textMessage,containsKeyword]);
+    // },[textMessage,containsKeyword]);
 
     //individual message sideEffects
     useEffect(()=>{
