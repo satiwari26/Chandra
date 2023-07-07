@@ -1,13 +1,15 @@
 const express = require('express');
+require('dotenv').config();
+
+console.log(process.env.google_API_KEY);
 
 //importing the google auth library and generating the client id
 const { TextServiceClient } = require("@google-ai/generativelanguage").v1beta2;
 const { GoogleAuth } = require("google-auth-library");
 const MODEL_NAME = "models/text-bison-001";
-const API_KEY = '';
 //defining the client
 const client = new TextServiceClient({
-  authClient: new GoogleAuth().fromAPIKey(API_KEY),
+  authClient: new GoogleAuth().fromAPIKey(process.env.google_API_KEY),
 });
 
 //importing data base files
@@ -98,7 +100,7 @@ io.on(('connection'),(socket)=>{//every time user loads up this website
             },
           })
           .then((result) => {
-            console.log(JSON.stringify(result[0]?.candidates?.[0]?.output));
+            console.log(JSON.stringify(result[0]?.candidates?.[0]?.output));  // take care of /n
             //set the message to generated text
             newMessage.content.message = JSON.stringify(result[0]?.candidates?.[0]?.output);
             newMessage.content.userImage = 'https://w7.pngwing.com/pngs/249/19/png-transparent-google-logo-g-suite-google-guava-google-plus-company-text-logo.png';
