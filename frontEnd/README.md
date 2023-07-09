@@ -1,1 +1,0 @@
-### an app developed to accomodate DRC students
