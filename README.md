@@ -1,6 +1,6 @@
 ### [devpost link](https://devpost.com/software/chandra-dk1ulx?ref_content=my-projects-tab&ref_feature=my_projects)
 
-![chandra architecture diagram](frontEnd/src/assets/image (1).png)
+![chandra architecture diagram](frontEnd/src/assets/chandraArch.png)
 
 ## Inspiration
 The inspiration for developing Chandra stemmed from the observation that myself and several colleagues extensively relied on Discord as a means of supporting various course channels within a server. While Discord proved to be a valuable and practical application, its design did not cater specifically to educational purposes. Consequently, the need arose for constant maintenance to ensure that it effectively facilitated the engagement of all students and provided them with designated channels for inquiries and collaborative discussions. While this approach sufficed, it necessitated considerable manual effort to sustain the server's functionality and uninterrupted operation. This responsibility began to resemble an administrative task, diverting attention from the primary focus of the students— their courses. Furthermore, we recognized that the utilization of generative AI technology within the learning process held significant potential; however, the cumbersome process of toggling between a website and a chat application proved to be inefficient. Sharing screenshots as responses further compounded these inefficiencies.
