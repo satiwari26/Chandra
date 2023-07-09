@@ -1,5 +1,4 @@
-###devpost submission:
-[devpost link](https://devpost.com/software/chandra-dk1ulx?ref_content=my-projects-tab&ref_feature=my_projects)
+### [devpost link](https://devpost.com/software/chandra-dk1ulx?ref_content=my-projects-tab&ref_feature=my_projects)
 
 
 ## Inspiration
