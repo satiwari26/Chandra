@@ -2,7 +2,7 @@
 
 ![chandra architecture diagram](frontEnd/src/assets/chandraArch.png)
 
-## To get Started (must require node > 15.0.0 && npm > 8.1.0)
+## To get Started (must require node > 18.0.0 && npm > 8.1.0)
  - cd backend
  - npm install
  - cd frontend
