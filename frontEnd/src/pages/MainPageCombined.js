@@ -20,15 +20,6 @@ import DefaultPageBlank from './DefaultPageBlank/DefaultPageBlank'
 //creating connection to the socket server
 const socket = io.connect("http://localhost:3001");
 
-//OPEN AI api key, temporary putting it here for the use
-// const open_ai_API_KEY = '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';
-// const openAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-
-//google api_url
-const MODEL_NAME = "models/text-bison-001";
-const API_KEY = 'AIzaSyByVHGGusvqKFTtt4aE271R-PkIY4VHbqY';
-const API_URL = `https://text.googleapis.com/v1beta2/projects/-/locations/global/models/${MODEL_NAME}:generateText`;
-
 export const MainPageCombined = ({signUserName,SignUserEmail,SignUserToken}) => {
     const [textMessage,setTextMessage] = useState('');
     const [userID,setUserID] = useState(0); //to uniquely identify each user
